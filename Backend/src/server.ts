@@ -5,6 +5,7 @@ import pool from "./db/db";
 
 
 
+dotenv.config();
 
 app.get("/", async (req, res) => {
   const result = await pool.query("SELECT NOW()");

@@ -4,8 +4,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-console.log("DB_PASSWORD TYPE:", typeof process.env.DB_PASSWORD);
 
 const pool = new Pool({
   user: process.env.DB_USER,

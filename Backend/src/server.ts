@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import app from './app';
 import pool from "./db/db";
-import express from 'express';
+
+
 
 
 

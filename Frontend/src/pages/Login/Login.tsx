@@ -2,7 +2,6 @@ import { Mail, Lock, Sparkles } from "lucide-react";
 import { Button, Card, Input } from "../../components/common";
 import { playSoftSound } from "../sound";
 import { Link, useNavigate } from 'react-router-dom';
-import logic from "./index";
 
 const Login = () => {
   

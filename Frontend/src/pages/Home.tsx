@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <>
-      <navbar>
+      <nav>
         <div className="flex justify-between px-6 py-5 ">
           <div>
             <p className="">logo</p>
@@ -16,14 +16,14 @@ const Home = () => {
               <Link
   to="/user/register"
   className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl px-8 py-4
-  bg-gradient-to-r from-purple-900 to-indigo-900
+  bg-linear-to-r from-purple-900 to-indigo-900
   text-white font-bold text-lg tracking-wide
   shadow-[0_0_35px_rgba(168,85,247,0.55)]
   transition-all duration-500 hover:scale-105 hover:shadow-[0_0_55px_rgba(217,70,239,0.75)]"
 >
   <span className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-  <span className="absolute -left-full top-0 h-full w-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-all duration-1000 group-hover:left-full" />
+  <span className="absolute -left-full top-0 h-full w-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-all duration-1000 group-hover:left-full" />
 
   <span className="relative z-10 flex items-center gap-2">
     Sign up
@@ -35,7 +35,7 @@ const Home = () => {
             </p>
           </div>
         </div>
-      </navbar>
+      </nav>
 
       <div className="min-h-screen overflow-hidden bg-[#030712] text-white">
         <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-indigo-600/30 blur-3xl" />

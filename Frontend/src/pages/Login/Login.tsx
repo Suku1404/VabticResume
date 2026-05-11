@@ -1,9 +1,13 @@
 import { Mail, Lock, Sparkles } from "lucide-react";
-import { Button, Card, Input } from "../components/common";
-import { playSoftSound } from "../pages/sound";
-import { Link } from "react-router-dom";
+import { Button, Card, Input } from "../../components/common";
+import { playSoftSound } from "../sound";
+import { Link, useNavigate } from 'react-router-dom';
+import Logic from "./index";
 
 const Login = () => {
+
+  const handleSubmit = Logic();
+  
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-950 via-indigo-950 to-violet-950 px-6 py-16 text-white">
       <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:items-center">
@@ -30,14 +34,14 @@ const Login = () => {
           <Card.Description className="text-gray-300">
             Enter your details to continue.
           </Card.Description>
-
+            <form typeof="form" onSubmit={handleSubmit}>
           <div className="mt-6 space-y-5">
             <Input
               label="Email"
               type="email"
               placeholder="you@example.com"
               leftIcon={<Mail size={18} />}
-              onChange={() => playSoftSound("input")}
+           
             />
 
             <Input
@@ -45,15 +49,14 @@ const Login = () => {
               type="password"
               placeholder="Enter password"
               leftIcon={<Lock size={18} />}
-              onChange={() => playSoftSound("input")}
+          
             />
 
             <Button fullWidth onClick={() => playSoftSound("success")}>
               Login
             </Button>
-
-
           </div>
+          </form>
         </Card>
       </div>
     </div>

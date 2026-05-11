@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 const RegisterUser = async (req: Request, res: Response) => {
 
 
-    const { Name, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     const isUserAlreadyExists = await pool.query(
         "SELECT * FROM USERS WHERE email = $1",
@@ -25,8 +25,8 @@ const RegisterUser = async (req: Request, res: Response) => {
 
 
     const newUser = await pool.query(
-        "INSERT INTO USERS (Name, email,password) VALUES($1,$2,$3) RETURNING *",
-        [Name, email, hashedPassword]
+        "INSERT INTO USERS (name, email,password) VALUES($1,$2,$3) RETURNING *",
+        [name, email, hashedPassword]
     );
 
     const token = jwt.sign(

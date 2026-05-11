@@ -1,10 +1,40 @@
 import { Mail, Lock, User, Sparkles } from "lucide-react";
 import { Button, Card, Input } from "../components/common";
-import { playSoftSound } from "../pages/sound";
-import '../index.css'
-import { Link } from "react-router-dom";
+import { playSoftSound } from "./sound";
+import "../index.css";
+import { Link, useNavigate } from "react-router-dom";
+import type { SubmitEvent } from "react";
+import axios from "axios";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    
+    const name = (form.elements.namedItem("name") as HTMLInputElement).value;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement)
+      .value;
+
+      try {
+        const res = await axios.post("http://localhost:3000/api/auth/user/register",
+        {
+          name,
+          email,
+          password
+        },{
+          withCredentials:true
+        });
+
+        navigate("/dashboard")
+        
+      } catch (err:any) {
+        console.log("Error Response:", err.response?.data)
+      }
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-white via-indigo-50 to-violet-100 px-6 py-16">
       <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:items-center">
@@ -18,28 +48,32 @@ const Register = () => {
           </h1>
 
           <p className="mt-5 text-gray-600">
-            Create your profile once and generate multiple professional resumes for internships, jobs, and tech roles.
+            Create your profile once and generate multiple professional resumes
+            for internships, jobs, and tech roles.
           </p>
         </div>
 
         <Card>
           <div className="flex gap-2 pb-2 ">
-              <p className="text-md font-bold">Already have an account?</p>
-              <Link className="text-blue-700 font-bold text-md underline" to="/user/login">Login </Link>
-
-            </div>
+            <p className="text-md font-bold">Already have an account?</p>
+            <Link
+              className="text-blue-700 font-bold text-md underline"
+              to="/user/login"
+            >
+              Login{" "}
+            </Link>
+          </div>
           <Card.Title>Create Account</Card.Title>
 
           <Card.Description>
             Simple, fast, and beginner-friendly registration.
           </Card.Description>
-
+            <form className="form" onSubmit={handleSubmit}>
           <div className="mt-6 space-y-5">
             <Input
-              label="Full Name"
+              label="name"
               placeholder="John doe"
               leftIcon={<User size={18} />}
-              onChange={() => playSoftSound("input")}
             />
 
             <Input
@@ -47,7 +81,6 @@ const Register = () => {
               type="email"
               placeholder="you@example.com"
               leftIcon={<Mail size={18} />}
-              onChange={() => playSoftSound("input")}
             />
 
             <Input
@@ -55,17 +88,17 @@ const Register = () => {
               type="password"
               placeholder="Create password"
               leftIcon={<Lock size={18} />}
-              onChange={() => playSoftSound("input")}
             />
 
-            <Button fullWidth onClick={() => playSoftSound("success")}>
+            <Button
+              fullWidth
+              type={"submit"}
+              onClick={() => playSoftSound("success")}
+            >
               Create Account
             </Button>
-            
-
-
-
           </div>
+          </form>
         </Card>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { Home, SearchX } from "lucide-react";
 import { Button } from "../components/common";
-import { playSoftSound } from "../pages/sound";
+import { playSoftSound } from "./sound";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {

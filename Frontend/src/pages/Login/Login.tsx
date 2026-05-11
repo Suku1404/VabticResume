@@ -2,8 +2,11 @@ import { Mail, Lock, Sparkles } from "lucide-react";
 import { Button, Card, Input } from "../../components/common";
 import { playSoftSound } from "../sound";
 import { Link, useNavigate } from 'react-router-dom';
+import Logic from "./index";
 
 const Login = () => {
+
+  const handleSubmit = Logic();
   
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-950 via-indigo-950 to-violet-950 px-6 py-16 text-white">
@@ -31,7 +34,7 @@ const Login = () => {
           <Card.Description className="text-gray-300">
             Enter your details to continue.
           </Card.Description>
-            
+            <form typeof="form" onSubmit={handleSubmit}>
           <div className="mt-6 space-y-5">
             <Input
               label="Email"
@@ -53,6 +56,7 @@ const Login = () => {
               Login
             </Button>
           </div>
+          </form>
         </Card>
       </div>
     </div>

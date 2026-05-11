@@ -27,6 +27,8 @@ const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
         console.log("Error res:", error.response?.data)
       }
   } 
+
+  return handleSubmit;
 }
   export default logic;
 

@@ -3,8 +3,12 @@ import { Button, Card, Input } from "../../components/common";
 import { playSoftSound } from "../sound";
 import { Link, useNavigate } from 'react-router-dom';
 import Logic from "./index";
+import { useState } from "react";
+
+
 
 const Login = () => {
+ 
 
   const handleSubmit = Logic();
   
@@ -40,7 +44,7 @@ const Login = () => {
               label="Email"
               type="email"
               placeholder="you@example.com"
-              leftIcon={<Mail size={18} />}
+              leftIcon={<Mail size={25} />}
            
             />
 
@@ -48,7 +52,7 @@ const Login = () => {
               label="Password"
               type="password"
               placeholder="Enter password"
-              leftIcon={<Lock size={18} />}
+              leftIcon={<Lock size={25} />}
           
             />
 

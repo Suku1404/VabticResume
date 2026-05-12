@@ -31,6 +31,11 @@ const templates = [
     description: "Perfect for React, UI engineering, and product design roles.",
     category: "Frontend",
   },
+   {
+    title: "Full Stack Engineer",
+    description: "Perfect for React, UI engineering, and product design roles.",
+    category: "Frontend",
+  },
 ];
 
 const Templates = () => {

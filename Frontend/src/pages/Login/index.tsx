@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, type SubmitEvent } from "react";
 
+// interface
+interface LoginData{
+  email:string;
+  password:string;
+}
 
 
 const logic =() => {
@@ -18,23 +23,25 @@ const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
     const password = (form.elements.namedItem("password") as HTMLInputElement)
       .value;
 
-      try {
+      // object with interface
+      const LoginForm: LoginData={
+        email,
+        password,
+      };
 
-        // setError("")
-        const res = await axios.post("http://localhost:3000/api/auth/user/login",{
-            email,
-            password
-        },{
+      try {
+        const res = await axios.post("http://localhost:3000/api/auth/user/login",
+          LoginForm
+          ,{
             withCredentials:true
         })
         navigate("/dashboard")
       } catch (error:any) {
-        console.log("Error Response:", error.response?.data)
+        console.log("Error res:", error.response?.data);
         
-       
       }
-  } 
-
+  }
+ 
   return handleSubmit;
     
   

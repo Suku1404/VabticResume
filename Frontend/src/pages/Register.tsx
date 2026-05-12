@@ -3,10 +3,13 @@ import { Button, Card, Input } from "../components/common";
 import { playSoftSound } from "./sound";
 import "../index.css";
 import { Link, useNavigate } from "react-router-dom";
-import type { SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import axios from "axios";
 
+
 const Register = () => {
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -15,6 +18,13 @@ const Register = () => {
     
     const name = (form.elements.namedItem("name") as HTMLInputElement).value;
     const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    // Email reg
+    const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailReg.test(email)){
+      setError("Please enter a valid email address!");
+      return;
+    }
+    setError("");
     const password = (form.elements.namedItem("password") as HTMLInputElement)
       .value;
 
@@ -97,6 +107,13 @@ const Register = () => {
             >
               Create Account
             </Button>
+            {
+              error && (
+                <p className="text-red-500 mt-2">
+                  {error}
+                </p>
+              )
+            }
           </div>
           </form>
         </Card>

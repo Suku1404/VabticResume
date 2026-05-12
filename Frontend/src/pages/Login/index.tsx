@@ -1,12 +1,15 @@
 // import Login from "./Login";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import type { SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 
 
 
 const logic =() => {
 const navigate = useNavigate();
+
+//  const [error, setError] = useState("");
+
 const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -16,6 +19,8 @@ const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
       .value;
 
       try {
+
+        // setError("")
         const res = await axios.post("http://localhost:3000/api/auth/user/login",{
             email,
             password
@@ -24,11 +29,15 @@ const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
         })
         navigate("/dashboard")
       } catch (error:any) {
-        console.log("Error res:", error.response?.data)
+        console.log("Error Response:", error.response?.data)
+        
+       
       }
   } 
 
   return handleSubmit;
+    
+  
 }
   export default logic;
 

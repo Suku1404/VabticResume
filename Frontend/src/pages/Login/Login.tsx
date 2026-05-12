@@ -51,10 +51,12 @@ const Login = () => {
               leftIcon={<Lock size={18} />}
           
             />
-
-            <Button fullWidth onClick={() => playSoftSound("success")}>
+ 
+            <Button type="submit" fullWidth onClick={() => playSoftSound("success")}>
               Login
             </Button>
+
+
           </div>
           </form>
         </Card>

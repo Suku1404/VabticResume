@@ -80,3 +80,80 @@ const List = ({ items }: { items: string[] }) => (
 );
 
 export default MinimalTemplate;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import type { ResumeData } from "./resume.types";
+
+// interface Props {
+//   data: ResumeData;
+// }
+
+// const MinimalResume = ({ data }: Props) => {
+//   return (
+//     <div className="bg-white max-w-2xl mx-auto p-10 min-h-screen shadow-xl">
+//       <div className="text-center mb-8">
+//         <h1 className="text-4xl font-light tracking-wide">
+//           {data.personalInfo.name}
+//         </h1>
+
+//         <p className="mt-2 text-gray-500">
+//           {data.personalInfo.email}
+//         </p>
+
+//         <p className="text-gray-500">
+//           {data.personalInfo.phone}
+//         </p>
+//       </div>
+
+//       <div className="mb-8">
+//         <h2 className="text-xl border-b pb-2 mb-3 font-semibold">
+//           Summary
+//         </h2>
+
+//         <p>{data.summary}</p>
+//       </div>
+
+//       <div>
+//         <h2 className="text-xl border-b pb-2 mb-3 font-semibold">
+//           Skills
+//         </h2>
+
+//         <div className="flex flex-wrap gap-3">
+//           {data.skills.map((skill, index) => (
+//             <span
+//               key={index}
+//               className="border px-3 py-1 rounded-full"
+//             >
+//               {skill}
+//             </span>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default MinimalResume;

@@ -1,3 +1,5 @@
+
+
 import type { ResumeData } from "../templates/resume.types";
 
 const ATSResume = ({ data }: { data: ResumeData }) => {
@@ -27,7 +29,7 @@ const ATSResume = ({ data }: { data: ResumeData }) => {
         {data.education}
       </Section>
 
-      <Section title="Experience">
+      <Section title="experience">
         <List items={data.experience} />
       </Section>
 

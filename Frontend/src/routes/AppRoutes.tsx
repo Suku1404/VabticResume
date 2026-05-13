@@ -1,12 +1,15 @@
 
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-
-// pages 
-
-import {Home, Login, Register, NotFound, Templates, Dashboard,Builder} from '../pages/index'
-// layouts
-
-import { AuthLayout, DashboardLayout } from '../layout/index'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  Builder,
+  Dashboard,
+  Home,
+  Login,
+  NotFound,
+  Register,
+  Template,
+} from "../pages/index";
+import { AuthLayout, DashboardLayout } from "../layout/index";
 
 // ats routes
 import AtsScore from '../pages/ATSScore/AtsScore'
@@ -24,13 +27,12 @@ const AppRoutes = () => {
             <Route path='/dashboard' element={<Dashboard/>} />
             <Route path= '/authlayout' element={<AuthLayout/>} />
             <Route path= '/dashboardlayout' element={<DashboardLayout/>} />
-            <Route path='/builder/:templateId' element={<Builder/>} />
-            <Route path='/ats-score-checker' element={<AtsScore/>} />
+
             
         </Routes>
       </Router>
     </div>
-  )
-}
+  );
+};
 
-export default AppRoutes
+export default AppRoutes;

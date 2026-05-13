@@ -1,12 +1,26 @@
 import { useState } from "react";
 import { Download, Sparkles } from "lucide-react";
-import { Button, Card, Input, Textarea } from "../common";
+import { Button, Card, Input, Select, Textarea } from "../common";
 import EducationForm, { type EducationItem } from "./EducationForm";
 import ExperienceForm, { type ExperienceItem } from "./ExperienceForm";
 import SkillsForm from "./SkillsForm";
-import ResumePreview from "./ResumePreview";
+import { templateMap } from "../../templates";
+import type { ResumeData } from "../../templates/resume.types";
+import { getTemplateById, templates } from "../../data/template";
 
-const ResumeForm = () => {
+const ResumeForm = ({
+  selectedTemplate,
+  onTemplateChange,
+}: {
+  selectedTemplate: string;
+  onTemplateChange?: (templateId: string) => void;
+}) => {
+  const currentTemplate = getTemplateById(selectedTemplate);
+  const templateOptions = templates.map((template) => ({
+    label: template.name,
+    value: template.id,
+  }));
+
   const [fullName, setFullName] = useState("john doe");
   const [title, setTitle] = useState("MERN Stack Developer");
   const [email, setEmail] = useState("john@example.com");
@@ -49,17 +63,51 @@ const ResumeForm = () => {
     },
   ]);
 
-  const previewData = {
-    fullName,
+  const [projects] = useState<string[]>([
+    "Resume Builder",
+    "Food Reel App",
+  ]);
+
+  const educationSummary = education
+    .map((item) =>
+      [
+        item.degree,
+        item.institute,
+        item.location,
+        [item.startYear, item.endYear].filter(Boolean).join(" - "),
+        item.description,
+      ]
+        .filter(Boolean)
+        .join(", ")
+    )
+    .join("\n");
+
+  const experienceSummary = experience.map((item) =>
+    [
+      [item.role, item.company].filter(Boolean).join(" at "),
+      item.location,
+      [item.startDate, item.endDate].filter(Boolean).join(" - "),
+      item.description,
+    ]
+      .filter(Boolean)
+      .join(", ")
+  );
+
+  const previewData: ResumeData = {
+    name: fullName,
     title,
     email,
     phone,
     location,
     summary,
     skills,
-    education,
-    experience,
+    education: educationSummary,
+    experience: experienceSummary,
+    projects,
   };
+
+  const ActiveTemplate =
+    templateMap[currentTemplate.id] ?? templateMap.ats;
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -72,11 +120,22 @@ const ResumeForm = () => {
                   Resume Builder
                 </h1>
                 <p className="text-sm text-gray-500">
-                  Create a premium ATS-friendly resume.
+                  Editing {currentTemplate.name}.
                 </p>
               </div>
 
               <Button leftIcon={<Sparkles size={17} />}>AI Improve</Button>
+            </div>
+
+            <div className="mb-6">
+              <Select
+                label="Resume Template"
+                value={currentTemplate.id}
+                options={templateOptions}
+                onChange={(event) =>
+                  onTemplateChange?.(event.target.value)
+                }
+              />
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
@@ -133,11 +192,20 @@ const ResumeForm = () => {
         </div>
 
         <div className="sticky top-6 h-fit">
-          <div className="mb-4 flex justify-end">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                Preview
+              </p>
+              <p className="text-sm font-semibold text-gray-900">
+                {currentTemplate.name}
+              </p>
+            </div>
+
             <Button leftIcon={<Download size={17} />}>Download PDF</Button>
           </div>
 
-          <ResumePreview data={previewData} />
+          <ActiveTemplate key={currentTemplate.id} data={previewData} />
         </div>
       </div>
     </div>

@@ -1,14 +1,12 @@
 
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 // pages 
- 
-import {Home, Login, Register, NotFound, Templates, Dashboard} from '../pages/index'
 
 
 // layouts
 
-import {AuthLayout, DashboardLayout} from'../layout/index'
+import { AuthLayout, DashboardLayout } from '../layout/index'
 
 
 const AppRoutes = () => {

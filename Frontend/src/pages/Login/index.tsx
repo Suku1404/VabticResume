@@ -1,7 +1,7 @@
 // import Login from "./Login";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import type { SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 
 // interface
 interface LoginData{
@@ -12,6 +12,9 @@ interface LoginData{
 
 const logic =() => {
 const navigate = useNavigate();
+
+//  const [error, setError] = useState("");
+
 const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -40,6 +43,8 @@ const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
   }
  
   return handleSubmit;
+    
+  
 }
   export default logic;
 

@@ -1,4 +1,18 @@
-export interface ResumeData {
+// export interface ResumeData {
+//   personalInfo: {
+//     name: string;
+//     email: string;
+//     phone: string;
+//   };
+
+//   summary: string;
+
+//   skills: string[];
+// }
+
+ 
+
+export interface ResumeData  {
   name: string;
   title: string;
   email: string;

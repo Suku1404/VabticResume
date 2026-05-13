@@ -13,6 +13,7 @@ type TemplateCardProps = {
 
 const TemplateCard = ({
   title,
+  
   description,
   image,
   category = "ATS Friendly",
@@ -76,3 +77,7 @@ const TemplateCard = ({
 };
 
 export default TemplateCard;
+
+
+
+

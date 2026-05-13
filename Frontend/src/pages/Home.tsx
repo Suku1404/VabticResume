@@ -14,24 +14,24 @@ const Home = () => {
           <div>
             <p>
               <Link
-  to="/user/register"
-  className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl px-8 py-4
+                to="/user/register"
+                className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl px-8 py-4
   bg-linear-to-r from-purple-900 to-indigo-900
   text-white font-bold text-lg tracking-wide
   shadow-[0_0_35px_rgba(168,85,247,0.55)]
   transition-all duration-500 hover:scale-105 hover:shadow-[0_0_55px_rgba(217,70,239,0.75)]"
->
-  <span className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              >
+                <span className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-  <span className="absolute -left-full top-0 h-full w-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-all duration-1000 group-hover:left-full" />
+                <span className="absolute -left-full top-0 h-full w-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-all duration-1000 group-hover:left-full" />
 
-  <span className="relative z-10 flex items-center gap-2">
-    Sign up
-    <span className="transition-transform duration-500 group-hover:translate-x-1">
-      →
-    </span>
-  </span>
-</Link>
+                <span className="relative z-10 flex items-center gap-2">
+                  Sign up
+                  <span className="transition-transform duration-500 group-hover:translate-x-1">
+                    →
+                  </span>
+                </span>
+              </Link>
             </p>
           </div>
         </div>
@@ -47,22 +47,30 @@ const Home = () => {
               Future-Ready AI Resume Builder
             </Badge>
 
-            <h1 className="mx-auto mt-8 max-w-5xl text-6xl font-black leading-tight md:text-7xl">
-              Create resumes that look like they came from the future.
-            </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-300">
-              Build premium ATS-friendly resumes with modern templates, live
-              preview, AI improvement, and recruiter-focused formatting.
-            </p>
+            <div className="flex gap-8  ">
 
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <div>
+                <h1 className="mx-auto mt-8 max-w-4xl font-black leading-tight md:text-6xl">
+                Create resumes that look like they came from the future.
+              </h1>
+
+                <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-300">
+                  Build premium ATS-friendly resumes with modern templates, live
+                  preview, AI improvement, and recruiter-focused formatting.
+                </p></div>
+              <div className="hover:shadow-xl">
+                <img className="rounded-xl transition-all ease-in-out   duration-800 hover:scale-110" src="https://media.istockphoto.com/id/852016894/photo/generic-resume-isolated-on-white.webp?a=1&b=1&s=612x612&w=0&k=20&c=vaJxz39vF1u4HSIdsjUUDSRHW8EmGcR7Qr7vSEw39w8=" alt="" />
+              </div>
+
+            </div>
+            <div className="mt-16 flex flex-wrap justify-center gap-4">
               <Button size="lg" rightIcon={<ArrowRight size={18} />}>
                 Start Building
               </Button>
 
               <Button size="lg" variant="outline">
-                View Templates
+                <Link to="/user/templates">View Template</Link>
               </Button>
             </div>
           </section>
@@ -130,7 +138,7 @@ const Home = () => {
                     <p className="text-sm text-gray-500">ATS Score: 94%</p>
                   </div>
                 </div>
-
+{/*  */}
                 <div className="mt-5 space-y-3">
                   <div className="h-3 w-3/4 rounded bg-gray-900" />
                   <div className="h-2 rounded bg-gray-200" />

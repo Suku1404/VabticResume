@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import TemplateCard from "../components/resume/TemplateCard";
 import { templates } from "../data/template";
 
-const TemplatesPage = () => {
+const Templates = () => {
   const navigate = useNavigate();
 
   const handleSelect = (templateId: string) => {
@@ -44,7 +44,7 @@ const TemplatesPage = () => {
   );
 };
 
-export default TemplatesPage;
+export default Templates;
 
 
 

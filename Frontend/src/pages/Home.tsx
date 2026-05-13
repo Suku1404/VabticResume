@@ -1,4 +1,4 @@
-import { ArrowRight, FileText, Sparkles, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight,FileSearch, FileText, Sparkles, ShieldCheck, Zap } from "lucide-react";
 import { Button, Badge, Card } from "../components/common";
 
 import "../index.css";
@@ -58,19 +58,31 @@ const Home = () => {
                 <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-300">
                   Build premium ATS-friendly resumes with modern templates, live
                   preview, AI improvement, and recruiter-focused formatting.
-                </p></div>
+                </p>
+                </div>
               <div className="hover:shadow-xl">
                 <img className="rounded-xl transition-all ease-in-out   duration-800 hover:scale-110" src="https://media.istockphoto.com/id/852016894/photo/generic-resume-isolated-on-white.webp?a=1&b=1&s=612x612&w=0&k=20&c=vaJxz39vF1u4HSIdsjUUDSRHW8EmGcR7Qr7vSEw39w8=" alt="" />
               </div>
 
             </div>
             <div className="mt-16 flex flex-wrap justify-center gap-4">
+              {/* new resume */}
               <Button size="lg" rightIcon={<ArrowRight size={18} />}>
                 Start Building
               </Button>
-
+                {/* templates */}
               <Button size="lg" variant="outline">
                 <Link to="/user/templates">View Template</Link>
+              </Button>
+              {/* Ats scorer */}
+              <Button size="lg" className="bg-gradient-to-r from-purple-500-700 to-indigo-600 hover:to-indigo-700 text-white shadow-lg">
+                <Link
+                to="/ats-score-checker"
+                className="flex items-center gap-2"
+                >
+                  <FileSearch size={18}/>
+                   ATS Score Checker
+                </Link>
               </Button>
             </div>
           </section>

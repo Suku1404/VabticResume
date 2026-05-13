@@ -16,7 +16,7 @@ const RegisterUser = async (req: Request, res: Response) => {
 
     if (isUserAlreadyExists.rows.length > 0) {
         return res.status(400).json({
-            message: "user is already exist"
+            message: "User Exists"
         })
     }
 
@@ -43,7 +43,7 @@ const RegisterUser = async (req: Request, res: Response) => {
     });
 
     res.status(201).json({
-        message: "user registerd Successful",
+        message: "User Registerd Successful",
         user: newUser.rows[0]
     });
 }
@@ -59,7 +59,7 @@ const LoginUser = async (req: Request, res: Response) => {
     if (user.rows.length === 0) {
 
         return res.status(400).json({
-            message: "user not found "
+            message: "User Not Found "
         });
     }
 
@@ -69,7 +69,7 @@ const LoginUser = async (req: Request, res: Response) => {
     if (!validPassword) {
 
         return res.status(400).json({
-            message: "invalid email and password"
+            message: "Invalid email and password"
         })
     }
 
@@ -87,7 +87,7 @@ const LoginUser = async (req: Request, res: Response) => {
     });
 
     res.status(201).json({
-        message: "user login  Successful",
+        message: "User Login  Successful",
         user: user.rows[0]
     });
 

@@ -127,13 +127,16 @@ interface Props {
 const ModernResume = ({ data }: Props) => {
   return (
     <div className="max-w-4xl mx-auto min-h-screen bg-white shadow-xl grid grid-cols-3 overflow-hidden">
-      <div className="bg-purple-700 text-white p-6">
+      <aside className="bg-gray-900 text-white p-6">
         <h1 className="text-3xl font-bold mb-4">
-          {data.personalInfo.name}
+          {data.name}
         </h1>
 
-        <p>{data.personalInfo.email}</p>
-        <p>{data.personalInfo.phone}</p>
+        <p className="text-gray-300 mb-6">{data.title}</p>
+
+        <p>{data.email}</p>
+        <p>{data.phone}</p>
+        <p>{data.location}</p>
 
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-3">
@@ -146,19 +149,50 @@ const ModernResume = ({ data }: Props) => {
             ))}
           </ul>
         </div>
-      </div>
+      </aside>
 
-      <div className="col-span-2 p-8">
-        <h2 className="text-2xl font-bold mb-3">
-          Professional Summary
-        </h2>
-
-        <p className="text-gray-700 leading-7">
+      <main className="col-span-2 p-8 space-y-6">
+        <Section title="Professional Summary">
           {data.summary}
-        </p>
-      </div>
+        </Section>
+
+        <Section title="Education">
+          {data.education}
+        </Section>
+
+        <Section title="Experience">
+          <List items={data.experience} />
+        </Section>
+
+        <Section title="Projects">
+          <List items={data.projects} />
+        </Section>
+      </main>
     </div>
   );
 };
+
+const Section = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <section>
+    <h2 className="text-lg font-bold text-gray-900 border-b pb-2 mb-3">
+      {title}
+    </h2>
+    <div className="text-sm leading-relaxed text-gray-700">{children}</div>
+  </section>
+);
+
+const List = ({ items }: { items: string[] }) => (
+  <ul className="list-disc ml-5 space-y-2 text-sm text-gray-700">
+    {items.map((item, index) => (
+      <li key={index}>{item}</li>
+    ))}
+  </ul>
+);
 
 export default ModernResume;

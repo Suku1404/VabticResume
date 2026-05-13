@@ -3,9 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 // pages 
 
-import { Home, Login, Register, NotFound, Template, Dashboard, Builder } from '../pages/index'
-
-// import { ATSResume } from '../templates'
 
 // layouts
 
@@ -17,19 +14,16 @@ const AppRoutes = () => {
     <div>
       <Router>
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/user/login' element={<Login />} />
-          <Route path='/user/register' element={<Register />} />
-          <Route path='/user/notfound' element={<NotFound />} />
-          <Route path='/user/templates' element={<Template />} />
-          <Route path="/builder/:templateId" element={<Builder/>}  />
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/authlayout' element={<AuthLayout />} />
-          <Route path='/dashboardlayout' element={<DashboardLayout />} />
+            <Route path='/' element={<Home/>}/>
+            <Route path='/user/login' element={<Login/>} />
+            <Route path='/user/register' element={<Register/>} />
+            <Route path='/user/notfound' element={<NotFound/>} />
+            <Route path='/user/templates' element={<Templates/>} />
+            <Route path='/dashboard' element={<Dashboard/>} />
+            <Route path= '/authlayout' element={<AuthLayout/>} />
+            <Route path= '/dashboardlayout' element={<DashboardLayout/>} />
 
-
-
-
+            
         </Routes>
       </Router>
     </div>

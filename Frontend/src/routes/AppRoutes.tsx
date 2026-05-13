@@ -5,7 +5,6 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
  
 import {Home, Login, Register, NotFound, Templates, Dashboard} from '../pages/index'
 
-import { ATSResume } from '../templates'
 
 // layouts
 
@@ -25,9 +24,7 @@ const AppRoutes = () => {
             <Route path='/dashboard' element={<Dashboard/>} />
             <Route path= '/authlayout' element={<AuthLayout/>} />
             <Route path= '/dashboardlayout' element={<DashboardLayout/>} />
-                   
 
-            <Route path= '/atstemplate' element={<ATSResume/>} />
             
         </Routes>
       </Router>

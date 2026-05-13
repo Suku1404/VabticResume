@@ -28,7 +28,7 @@ const Dashboard = () => {
 
           <div className="mt-6 flex flex-wrap gap-4">
             <Button>Build New Resume</Button>
-            <Button variant="outline"><Link to={"/user/template"}>Explore Templates</Link></Button>
+            <Button variant="outline"><Link to={"/user/templates"}>Explore Templates</Link></Button>
           </div>
         </div>
 

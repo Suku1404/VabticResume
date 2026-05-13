@@ -1,4 +1,4 @@
-export type ResumeData = {
+export interface ResumeData {
   name: string;
   title: string;
   email: string;

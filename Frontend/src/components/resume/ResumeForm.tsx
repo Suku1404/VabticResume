@@ -7,10 +7,10 @@ import SkillsForm from "./SkillsForm";
 import ResumePreview from "./ResumePreview";
 
 const ResumeForm = () => {
-  const [fullName, setFullName] = useState("Sakshi Rajput");
+  const [fullName, setFullName] = useState("john doe");
   const [title, setTitle] = useState("MERN Stack Developer");
-  const [email, setEmail] = useState("sakshi@example.com");
-  const [phone, setPhone] = useState("+91 9876543210");
+  const [email, setEmail] = useState("john@example.com");
+  const [phone, setPhone] = useState("+91 9876565610");
   const [location, setLocation] = useState("India");
   const [summary, setSummary] = useState(
     "Final-year B.Tech CSE student and MERN Stack Developer with hands-on experience building scalable full-stack applications using React.js, Node.js, Express.js, MongoDB, and Java."

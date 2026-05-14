@@ -470,7 +470,7 @@ const ResumeForm = ({
 
         <div className="mb-6">
           <Select
-            label="Resume Template"
+            label="For diffrent  Resume Template"
             value={currentTemplate.id}
             options={templateOptions}
             onChange={(event) => onTemplateChange?.(event.target.value)}

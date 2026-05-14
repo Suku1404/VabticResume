@@ -1,6 +1,6 @@
 import { Bell, Menu, Search, Sparkles, User } from "lucide-react";
-import Button from "../components/common/Button";
-import Input from "../components/common/Input";
+import Button from "../common/Button";
+import Input from "../common/Input";
 
 type NavbarProps = {
   onMenuClick?: () => void;

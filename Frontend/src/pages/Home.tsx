@@ -1,5 +1,14 @@
-import { ArrowRight,FileSearch, FileText, Sparkles, ShieldCheck, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  FileSearch,
+  FileText,
+  Sparkles,
+  ShieldCheck,
+  Zap,
+} from "lucide-react";
 import { Button, Badge, Card } from "../components/common";
+import Footer from "./Footer";
+import HomeExtraSections from "./ExtraSections";
 
 import "../index.css";
 import { Link } from "react-router-dom";
@@ -16,10 +25,10 @@ const Home = () => {
               <Link
                 to="/user/register"
                 className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl px-8 py-4
-  bg-linear-to-r from-purple-900 to-indigo-900
-  text-white font-bold text-lg tracking-wide
-  shadow-[0_0_35px_rgba(168,85,247,0.55)]
-  transition-all duration-500 hover:scale-105 hover:shadow-[0_0_55px_rgba(217,70,239,0.75)]"
+                 bg-linear-to-r from-purple-900 to-indigo-900
+                 text-white font-bold text-lg tracking-wide
+                 shadow-[0_0_35px_rgba(168,85,247,0.55)]
+                 transition-all duration-500 hover:scale-105 hover:shadow-[0_0_55px_rgba(217,70,239,0.75)]"
               >
                 <span className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
@@ -47,41 +56,45 @@ const Home = () => {
               Future-Ready AI Resume Builder
             </Badge>
 
-
             <div className="flex gap-8  ">
-
               <div>
                 <h1 className="mx-auto mt-8 max-w-4xl font-black leading-tight md:text-6xl">
-                Create resumes that look like they came from the future.
-              </h1>
+                  Create resumes that look like they came from the future.
+                </h1>
 
                 <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-300">
                   Build premium ATS-friendly resumes with modern templates, live
                   preview, AI improvement, and recruiter-focused formatting.
                 </p>
-                </div>
-              <div className="hover:shadow-xl">
-                <img className="rounded-xl transition-all ease-in-out   duration-800 hover:scale-110" src="https://media.istockphoto.com/id/852016894/photo/generic-resume-isolated-on-white.webp?a=1&b=1&s=612x612&w=0&k=20&c=vaJxz39vF1u4HSIdsjUUDSRHW8EmGcR7Qr7vSEw39w8=" alt="" />
               </div>
-
+              <div className="hover:shadow-xl">
+                <img
+                  className="rounded-xl transition-all ease-in-out   duration-800 hover:scale-110"
+                  src="https://media.istockphoto.com/id/852016894/photo/generic-resume-isolated-on-white.webp?a=1&b=1&s=612x612&w=0&k=20&c=vaJxz39vF1u4HSIdsjUUDSRHW8EmGcR7Qr7vSEw39w8="
+                  alt=""
+                />
+              </div>
             </div>
             <div className="mt-16 flex flex-wrap justify-center gap-4">
               {/* new resume */}
               <Button size="lg" rightIcon={<ArrowRight size={18} />}>
-                Start Building
+                <Link to={"/user/register"}>Start Building</Link>
               </Button>
-                {/* templates */}
+              {/* templates */}
               <Button size="lg" variant="outline">
                 <Link to="/user/templates">View Template</Link>
               </Button>
               {/* Ats scorer */}
-              <Button size="lg" className="bg-gradient-to-r from-purple-500-700 to-indigo-600 hover:to-indigo-700 text-white shadow-lg">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-500-700 to-indigo-600 hover:to-indigo-700 text-white shadow-lg"
+              >
                 <Link
-                to="/ats-score-checker"
-                className="flex items-center gap-2"
+                  to="/ats-score-checker"
+                  className="flex items-center gap-2"
                 >
-                  <FileSearch size={18}/>
-                   ATS Score Checker
+                  <FileSearch size={18} />
+                  ATS Score Checker
                 </Link>
               </Button>
             </div>
@@ -150,7 +163,7 @@ const Home = () => {
                     <p className="text-sm text-gray-500">ATS Score: 94%</p>
                   </div>
                 </div>
-{/*  */}
+                {/*  */}
                 <div className="mt-5 space-y-3">
                   <div className="h-3 w-3/4 rounded bg-gray-900" />
                   <div className="h-2 rounded bg-gray-200" />
@@ -161,6 +174,10 @@ const Home = () => {
             </div>
           </section>
         </main>
+         <HomeExtraSections />
+
+         {/* your dashboard content */}
+      <Footer />
       </div>
     </>
   );

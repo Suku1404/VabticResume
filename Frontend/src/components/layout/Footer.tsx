@@ -1,4 +1,4 @@
-import { Github, LinkedIn, Mail, Sparkles } from "lucide-react";
+import { AtSign, ExternalLink, Mail, Sparkles } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -19,10 +19,10 @@ const Footer = () => {
 
         <div className="flex items-center gap-4 text-gray-500">
           <a href="#" className="transition hover:text-indigo-600">
-            <Github size={20} />
+            <ExternalLink size={20} />
           </a>
           <a href="#" className="transition hover:text-indigo-600">
-            <LinkedIn size={20} />
+            <AtSign size={20} />
           </a>
           <a href="#" className="transition hover:text-indigo-600">
             <Mail size={20} />

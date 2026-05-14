@@ -112,6 +112,11 @@ const upload = multer({
   storage: multer.memoryStorage()
 })
 
+const getSafeErrorMessage = (error: unknown) => {
+  if (error instanceof Error) return error.message
+  return 'Unknown error'
+}
+
 router.post('/ats-check-score', upload.single('resume'), async (req, res) => {
   try {
     if (!req.file) {
@@ -131,7 +136,7 @@ router.post('/ats-check-score', upload.single('resume'), async (req, res) => {
 
         console.log('Extracted text length:', resumeText.length)
       } catch (pdfError: any) {
-        console.error('PDF Parse Error Details:', pdfError)
+        console.error('PDF Parse Error:', getSafeErrorMessage(pdfError))
 
         return res.status(400).json({
           success: false,
@@ -164,7 +169,11 @@ router.post('/ats-check-score', upload.single('resume'), async (req, res) => {
       })
     }
 
-    const atsResult = calculateATSScore(resumeText)
+    const jobDescription = typeof req.body?.jobDescription === 'string'
+      ? req.body.jobDescription
+      : ''
+
+    const atsResult = calculateATSScore(resumeText, jobDescription)
 
     return res.status(200).json({
       success: true,
@@ -173,7 +182,7 @@ router.post('/ats-check-score', upload.single('resume'), async (req, res) => {
       ...atsResult
     })
   } catch (error: any) {
-    console.error('ATS Check Error:', error)
+    console.error('ATS Check Error:', getSafeErrorMessage(error))
 
     return res.status(500).json({
       success: false,

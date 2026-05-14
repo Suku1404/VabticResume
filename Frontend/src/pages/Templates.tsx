@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import TemplateCard from "../components/resume/TemplateCard";
 import { templates } from "../data/template";
+import Footer from "./Footer";
 
 const Templates = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Templates = () => {
   };
 
   return (
+    <>
     <div className="min-h-screen bg-gray-100 p-10">
       <div className="mb-10">
         <h1 className="mb-3 text-5xl font-bold">
@@ -37,8 +39,12 @@ const Templates = () => {
           />
         ))}
       </div>
+
     </div>
+     {/* your dashboard content */}
+      <Footer />
+    </>
   );
 };
 
-export default TemplatesPage;
+export default Templates;

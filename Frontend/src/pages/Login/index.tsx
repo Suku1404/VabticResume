@@ -1,7 +1,7 @@
 // import Login from "./Login";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState, type SubmitEvent } from "react";
+import type { SubmitEvent } from "react";
 
 // interface
 interface LoginData{
@@ -30,7 +30,7 @@ const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
       };
 
       try {
-        const res = await axios.post("http://localhost:3000/api/auth/user/login",
+        await axios.post("http://localhost:3000/api/auth/user/login",
           LoginForm
           ,{
             withCredentials:true

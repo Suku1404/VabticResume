@@ -29,7 +29,7 @@ const Register = () => {
       .value;
 
       try {
-        const res = await axios.post("http://localhost:3000/api/auth/user/register",
+        await axios.post("http://localhost:3000/api/auth/user/register",
         {
           name,
           email,
@@ -38,7 +38,14 @@ const Register = () => {
           withCredentials:true
         });
 
-        navigate("/dashboard")
+        // Check if there's a redirect template stored
+        const redirectTemplate = localStorage.getItem("redirectTemplate");
+        if (redirectTemplate) {
+          localStorage.removeItem("redirectTemplate");
+          navigate(`/builder/${redirectTemplate}`);
+        } else {
+          navigate("/dashboard");
+        }
         
       } catch (err:any) {
         console.log("Error Response:", err.response?.data)

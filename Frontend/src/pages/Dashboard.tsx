@@ -1,6 +1,7 @@
 import { FileText, LayoutTemplate, Sparkles, TrendingUp, Download } from "lucide-react";
 import { Button, Card, Badge } from "../components/common";
 import { Link } from "react-router-dom";
+import Footer from "./Footer";
 
 const stats = [
   { title: "Total Resumes", value: "12", icon: FileText },
@@ -11,6 +12,7 @@ const stats = [
 
 const Dashboard = () => {
   return (
+    <>
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="mx-auto max-w-7xl space-y-8">
         <div className="rounded-3xl bg-linear-to-r from-gray-950 via-indigo-950 to-violet-950 p-8 text-white shadow-2xl">
@@ -27,7 +29,7 @@ const Dashboard = () => {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-4">
-            <Button>Build New Resume</Button>
+            <Button variant="outline"><Link to={"/user/templates"}>Build New Resume</Link></Button>
             <Button variant="outline"><Link to={"/user/templates"}>Explore Templates</Link></Button>
           </div>
         </div>
@@ -79,7 +81,11 @@ const Dashboard = () => {
           </div>
         </Card>
       </div>
+       
     </div>
+    {/* your dashboard content */}
+      <Footer />
+      </>
   );
 };
 

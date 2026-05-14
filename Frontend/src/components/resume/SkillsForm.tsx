@@ -5,9 +5,10 @@ import { Badge, Button, Input } from "../common";
 type SkillsFormProps = {
   skills: string[];
   setSkills: React.Dispatch<React.SetStateAction<string[]>>;
+  footer?: React.ReactNode;
 };
 
-const SkillsForm = ({ skills, setSkills }: SkillsFormProps) => {
+const SkillsForm = ({ skills, setSkills, footer }: SkillsFormProps) => {
   const [skill, setSkill] = useState("");
 
   const addSkill = () => {
@@ -58,6 +59,8 @@ const SkillsForm = ({ skills, setSkills }: SkillsFormProps) => {
           </Badge>
         ))}
       </div>
+
+      {footer}
     </div>
   );
 };

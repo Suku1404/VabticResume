@@ -18,7 +18,10 @@ const FrontendEngineerTemplate = ({ data }: { data: ResumeData }) => {
       <Section title="Frontend Skills">
         <div className="flex flex-wrap gap-2">
           {data.skills.map((skill, i) => (
-            <span key={i} className="border px-3 py-1 rounded-full text-sm">
+            <span
+              key={i}
+              className="inline-flex min-h-8 items-center justify-center rounded-full border px-3  text-sm leading-none"
+            >
               {skill}
             </span>
           ))}
@@ -48,7 +51,7 @@ const FrontendEngineerTemplate = ({ data }: { data: ResumeData }) => {
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="mb-5">
-    <h2 className="text-lg font-semibold uppercase tracking-wide border-b mb-2">
+    <h2 className="mb-2 border-b pb-1 text-lg font-semibold uppercase leading-tight tracking-wide">
       {title}
     </h2>
     <div className="text-sm leading-relaxed">{children}</div>

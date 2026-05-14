@@ -13,6 +13,7 @@ export type ExperienceItem = {
 type ExperienceFormProps = {
   experience: ExperienceItem[];
   setExperience: React.Dispatch<React.SetStateAction<ExperienceItem[]>>;
+  footer?: React.ReactNode;
 };
 
 const emptyExperience: ExperienceItem = {
@@ -24,7 +25,7 @@ const emptyExperience: ExperienceItem = {
   description: "",
 };
 
-const ExperienceForm = ({ experience, setExperience }: ExperienceFormProps) => {
+const ExperienceForm = ({ experience, setExperience, footer }: ExperienceFormProps) => {
   const updateExperience = (
     index: number,
     field: keyof ExperienceItem,
@@ -138,6 +139,8 @@ const ExperienceForm = ({ experience, setExperience }: ExperienceFormProps) => {
           </div>
         </div>
       ))}
+
+      {footer}
     </div>
   );
 };

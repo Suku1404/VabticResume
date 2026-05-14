@@ -13,6 +13,7 @@ export type EducationItem = {
 type EducationFormProps = {
   education: EducationItem[];
   setEducation: React.Dispatch<React.SetStateAction<EducationItem[]>>;
+  footer?: React.ReactNode;
 };
 
 const emptyEducation: EducationItem = {
@@ -24,7 +25,7 @@ const emptyEducation: EducationItem = {
   description: "",
 };
 
-const EducationForm = ({ education, setEducation }: EducationFormProps) => {
+const EducationForm = ({ education, setEducation, footer }: EducationFormProps) => {
   const updateEducation = (
     index: number,
     field: keyof EducationItem,
@@ -137,6 +138,8 @@ const EducationForm = ({ education, setEducation }: EducationFormProps) => {
           </div>
         </div>
       ))}
+
+      {footer}
     </div>
   );
 };

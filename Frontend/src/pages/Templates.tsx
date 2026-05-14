@@ -41,4 +41,4 @@ const Templates = () => {
   );
 };
 
-export default TemplatesPage;
+export default Templates;

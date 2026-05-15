@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 
 
 import {
@@ -179,6 +180,12 @@ const createWordDocument = (element: HTMLElement, title: string) => {
   `;
 };
 
+
+
+
+
+
+
 const downloadBlob = (content: string, fileName: string, mimeType: string) => {
   const blob = new Blob(["\ufeff", content], { type: mimeType });
   const url = URL.createObjectURL(blob);
@@ -310,6 +317,7 @@ const ResumeForm = ({
     phone,
     location,
     summary,
+
     skills,
     education: educationSummary,
     experience: experienceSummary,
@@ -460,6 +468,45 @@ const ResumeForm = ({
 
     }
   };
+
+   const navigate = useNavigate()
+  const saveResume = async () => {
+
+   
+    try {
+
+      const token = localStorage.getItem("token");
+
+      const resumeData = {
+        title: "Frontend Resume",
+
+
+        education,
+        experience,
+        skills,
+      };
+
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/save-resume",
+        resumeData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+
+      navigate("/my-resume");
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+  };
+
   const sectionFooter = (
     <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-5">
       <Button
@@ -474,10 +521,18 @@ const ResumeForm = ({
 
       <Button
         type="button"
-        onClick={goToNextSection}
-        rightIcon={
-          isLastSection ? <Check size={17} /> : <ChevronRight size={17} />
-        }
+        onClick={async () => {
+
+          if (isLastSection) {
+
+            await saveResume();
+
+          } else {
+
+            goToNextSection();
+
+          }
+        }}
       >
         {isLastSection ? "Finish" : "Save & Next"}
       </Button>

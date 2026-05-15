@@ -25,7 +25,7 @@ type DashboardLayoutProps = {
 
 const menuItems = [
   { label: "Dashboard", icon: Home },
-  { label: "My Resumes", icon: FileText, path: "/my-resume"},
+  { label: "My Resumes", icon: FileText, path: "/my-resume/:id"},
   { label: "Templates", icon: LayoutTemplate , path: "/user/templates" },
   { label: "AI Assistant", icon: Sparkles },
   { label: "Profile", icon: User },

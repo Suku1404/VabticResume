@@ -22,7 +22,7 @@ const AppRoutes = () => {
             <Route path='/user/notfound' element={<NotFound/>} />
             <Route path='/user/templates' element={<Templates/>} />
             <Route path='/dashboard' element={<Dashboard/>} />
-            <Route path='/my-resume' element={<SaveResume/>} />
+            <Route path='/my-resume/:id' element={<SaveResume/>} />
            <Route
             path="/authlayout"
             element={<AuthLayout>Auth Layout Preview</AuthLayout>}

@@ -4,33 +4,56 @@ import pool from "../db/db"
 import { Request, Response } from "express";
 import auuthcontroller from "./auth.controller"
 
-const createResume = async (
+ const createResume = async (
   req: Request,
   res: Response
 ) => {
-  try {
-    const { title, resumeData } = req.body;
 
-   const userId = (req as any).user.id;
+  try {
+
+    const userId = (req as any).user.id;
+
+    const {
+      title,
+      personalInfo,
+      education,
+      experience,
+      skills,
+    } = req.body;
 
     const result = await pool.query(
       `
-      INSERT INTO resumes (user_id, title, resume_data)
+      INSERT INTO resumes
+      (
+        user_id,
+        title,
+        resume_data
+      )
       VALUES ($1, $2, $3)
       RETURNING *
       `,
-      [userId, title, resumeData]
+      [
+        userId,
+        title,
+        {
+          personalInfo,
+          education,
+          experience,
+          skills,
+        },
+      ]
     );
 
-    res.status(201).json(result.rows[0]);
+    res.json(result.rows[0]);
 
   } catch (error) {
+
     res.status(500).json({
       message: "Server Error",
     });
+
   }
 };
-
 
  const getMyResumes = async (
   req: Request,

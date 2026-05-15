@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
+const SaveResume = () => {
 
-const MyResumes = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   // store all resumes
   const [resumes, setResumes] = useState([]);
@@ -17,7 +20,7 @@ const MyResumes = () => {
 
       // API call
       const response = await axios.get(
-        "http://localhost:3000/api/auth/my-resumes",
+        `http://localhost:3000/api/auth/my-resume/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -43,11 +46,15 @@ const MyResumes = () => {
   return (
     <div>
 
-      <h1>My Resumes</h1>
+      <h1>Loading...</h1>
 
       {
         resumes.map((resume: any) => (
-          <div key={resume.id}>
+          <div
+            key={resume.id}
+            onClick={() => navigate(`/my-resume/${resume.id}`)}
+            className="cursor-pointer border p-4 rounded-lg"
+          >
 
             <h2>{resume.title}</h2>
 
@@ -59,4 +66,4 @@ const MyResumes = () => {
   );
 };
 
-export default MyResumes;
+export default SaveResume;

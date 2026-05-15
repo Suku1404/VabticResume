@@ -3,6 +3,7 @@ import type { EducationItem } from "./EducationForm";
 import type { ExperienceItem } from "./ExperienceForm";
 import { forwardRef } from "react";
 
+
 export type ResumePreviewData = {
   fullName: string;
   title: string;

@@ -1,4 +1,7 @@
 import { useRef, useState } from "react";
+
+
+
 import {
   Check,
   ChevronLeft,
@@ -13,6 +16,8 @@ import SkillsForm from "./SkillsForm";
 import { templateMap } from "../../templates";
 import type { ResumeData } from "../../templates/resume.types";
 import { getTemplateById, templates } from "../../data/template";
+
+
 
 const editorSections = [
   { id: "personal", label: "Personal" },
@@ -188,6 +193,7 @@ const downloadBlob = (content: string, fileName: string, mimeType: string) => {
 };
 
 const getDownloadName = (name: string, format: DownloadFormat) => {
+
   const cleanName = name
     .trim()
     .replace(/[^a-z0-9]+/gi, "-")
@@ -343,61 +349,117 @@ const ResumeForm = ({
     }
   };
 
+
   const downloadResume = async () => {
-    const previewElement = resumePreviewRef.current;
 
-    if (!previewElement) return;
+    if (!resumePreviewRef.current) return;
 
-    const fileName = getDownloadName(fullName, downloadFormat);
+    const fileName = getDownloadName(
+      fullName,
+      downloadFormat
+    );
+
     setIsDownloading(true);
 
     try {
+
+      // PDF DOWNLOAD
       if (downloadFormat === "pdf") {
-        const html2pdf = (await import("html2pdf.js")).default;
-        const restorePreviewStyles = applyPdfSafeStyles(previewElement);
+
+        const html2canvas =
+          (await import("html2canvas")).default;
+
+        const { default: jsPDF } =
+          await import("jspdf");
+
+        const restorePreviewStyles =
+          applyPdfSafeStyles(
+            resumePreviewRef.current
+          );
+
         await waitForPaint();
 
         try {
-          await html2pdf()
-            .set({
-              filename: fileName,
-              image: { type: "jpeg", quality: 0.98 },
-              html2canvas: {
-                backgroundColor: "#ffffff",
-                scale: 2,
-                useCORS: true,
-              },
-              jsPDF: {
-                unit: "in",
-                format: "a4",
-                orientation: "portrait",
-              },
-             
-            })
-            .from(previewElement)
-            .save();
+
+          const canvas = await html2canvas(
+            resumePreviewRef.current,
+            {
+              scale: 2,
+              useCORS: true,
+              backgroundColor: "#ffffff",
+            }
+          );
+
+          const imgData =
+            canvas.toDataURL("image/png");
+
+          const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4",
+          });
+
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+          const imageHeight = (canvas.height * pageWidth) / canvas.width;
+          let remainingHeight = imageHeight;
+          let imageY = -5; // Shift image up by 5mm
+
+          pdf.addImage(
+            imgData,
+            "PNG",
+            0,
+            imageY,
+            pageWidth,
+            imageHeight
+          );
+
+          remainingHeight -= pageHeight;
+
+          while (remainingHeight > 0.1) {
+            imageY -= pageHeight;
+            pdf.addPage();
+            pdf.addImage(
+              imgData,
+              "PNG",
+              0,
+              imageY,
+              pageWidth,
+              imageHeight
+            );
+            remainingHeight -= pageHeight;
+          }
+
+          pdf.save(fileName);
+
         } finally {
+
           restorePreviewStyles();
+
         }
 
         return;
       }
 
-      const documentContent = createWordDocument(
-        previewElement,
-        `${currentTemplate.name} Resume`
-      );
+      // WORD DOWNLOAD
+      const documentContent =
+        createWordDocument(
+          resumePreviewRef.current,
+          `${currentTemplate.name} Resume`
+        );
 
       downloadBlob(
         documentContent,
         fileName,
         "application/msword;charset=utf-8"
       );
+
     } finally {
+
       setIsDownloading(false);
+
     }
   };
-
   const sectionFooter = (
     <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-5">
       <Button
@@ -548,20 +610,18 @@ const ResumeForm = ({
                     key={section.id}
                     type="button"
                     onClick={() => goToSection(section.id)}
-                    className={`flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2 text-left text-sm font-semibold transition ${
-                      isActive
-                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                        : "border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:bg-gray-50"
-                    }`}
+                    className={`flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2 text-left text-sm font-semibold transition ${isActive
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:bg-gray-50"
+                      }`}
                   >
                     <span
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs ${
-                        isComplete
-                          ? "bg-indigo-600 text-white"
-                          : isActive
-                            ? "bg-indigo-100 text-indigo-700"
-                            : "bg-gray-100 text-gray-500"
-                      }`}
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs ${isComplete
+                        ? "bg-indigo-600 text-white"
+                        : isActive
+                          ? "bg-indigo-100 text-indigo-700"
+                          : "bg-gray-100 text-gray-500"
+                        }`}
                     >
                       {isComplete ? <Check size={16} /> : index + 1}
                     </span>
@@ -608,8 +668,11 @@ const ResumeForm = ({
             </div>
           </div>
 
-          <div ref={resumePreviewRef}>
-            <ActiveTemplate key={currentTemplate.id} data={previewData} />
+          <div
+            ref={resumePreviewRef}>
+
+            <ActiveTemplate key={currentTemplate.id}
+              data={previewData} />
           </div>
         </div>
       </div>

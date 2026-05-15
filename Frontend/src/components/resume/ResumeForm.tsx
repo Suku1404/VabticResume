@@ -10,9 +10,11 @@ import { Button, Card, Input, Select, Textarea } from "../common";
 import EducationForm, { type EducationItem } from "./EducationForm";
 import ExperienceForm, { type ExperienceItem } from "./ExperienceForm";
 import SkillsForm from "./SkillsForm";
+import ResumePreview from "./ResumePreview";
 import { templateMap } from "../../templates";
 import type { ResumeData } from "../../templates/resume.types";
 import { getTemplateById, templates } from "../../data/template";
+import { downloadResumePdf } from "../../utils/downloadResumePdf";
 
 const editorSections = [
   { id: "personal", label: "Personal" },
@@ -29,166 +31,8 @@ const downloadOptions = [
   { label: "DOC", value: "doc" },
 ];
 
-const clamp = (value: number, min = 0, max = 1) =>
-  Math.min(max, Math.max(min, value));
-
-const parseOklchNumber = (value: string, isLightness = false) => {
-  const cleanValue = value.trim();
-  const parsedValue = Number.parseFloat(cleanValue);
-
-  if (Number.isNaN(parsedValue)) return 0;
-  if (cleanValue.endsWith("%")) return parsedValue / 100;
-
-  return isLightness && parsedValue > 1 ? parsedValue / 100 : parsedValue;
-};
-
-const linearToSrgb = (value: number) => {
-  const clampedValue = clamp(value);
-  const srgbValue =
-    clampedValue <= 0.0031308
-      ? 12.92 * clampedValue
-      : 1.055 * clampedValue ** (1 / 2.4) - 0.055;
-
-  return Math.round(clamp(srgbValue) * 255);
-};
-
-const oklchToRgb = (oklchValue: string) => {
-  const [colorPart, alphaPart] = oklchValue.split("/");
-  const [lightnessValue, chromaValue, hueValue = "0"] = colorPart
-    .trim()
-    .split(/\s+/);
-
-  const lightness = parseOklchNumber(lightnessValue, true);
-  const chroma = parseOklchNumber(chromaValue);
-  const hue = Number.parseFloat(hueValue) || 0;
-  const alpha = alphaPart ? parseOklchNumber(alphaPart) : 1;
-  const hueRadians = (hue * Math.PI) / 180;
-  const a = chroma * Math.cos(hueRadians);
-  const b = chroma * Math.sin(hueRadians);
-
-  const lValue = lightness + 0.3963377774 * a + 0.2158037573 * b;
-  const mValue = lightness - 0.1055613458 * a - 0.0638541728 * b;
-  const sValue = lightness - 0.0894841775 * a - 1.291485548 * b;
-  const l = lValue ** 3;
-  const m = mValue ** 3;
-  const s = sValue ** 3;
-  const red = linearToSrgb(
-    4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
-  );
-  const green = linearToSrgb(
-    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
-  );
-  const blue = linearToSrgb(
-    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s
-  );
-
-  return alpha < 1
-    ? `rgba(${red}, ${green}, ${blue}, ${clamp(alpha)})`
-    : `rgb(${red}, ${green}, ${blue})`;
-};
-
-const normalizeColorFunctions = (value: string) =>
-  value.replace(/oklch\(([^)]+)\)/g, (_, oklchValue: string) =>
-    oklchToRgb(oklchValue)
-  );
-
-const colorStyleProperties = [
-  "background-color",
-  "border-color",
-  "border-top-color",
-  "border-right-color",
-  "border-bottom-color",
-  "border-left-color",
-  "color",
-  "outline-color",
-  "text-decoration-color",
-] as const;
-
-const applyNormalizedColors = (source: Element, target: HTMLElement) => {
-  const computedStyle = window.getComputedStyle(source);
-
-  colorStyleProperties.forEach((property) => {
-    const value = computedStyle.getPropertyValue(property);
-
-    if (value) {
-      target.style.setProperty(property, normalizeColorFunctions(value));
-    }
-  });
-};
-
-const copyComputedStyles = (source: Element, target: Element) => {
-  applyNormalizedColors(source, target as HTMLElement);
-
-  Array.from(source.children).forEach((sourceChild, index) => {
-    const targetChild = target.children[index];
-
-    if (targetChild) {
-      copyComputedStyles(sourceChild, targetChild);
-    }
-  });
-};
-
-const applyPdfSafeStyles = (rootElement: HTMLElement) => {
-  const elements = [
-    rootElement,
-    ...Array.from(rootElement.querySelectorAll<HTMLElement>("*")),
-  ];
-  const snapshots = elements.map((element) => ({
-    element,
-    style: element.getAttribute("style"),
-  }));
-
-  elements.forEach((element) => {
-    applyNormalizedColors(element, element);
-  });
-
-  return () => {
-    snapshots.forEach(({ element, style }) => {
-      if (style === null) {
-        element.removeAttribute("style");
-      } else {
-        element.setAttribute("style", style);
-      }
-    });
-  };
-};
-
-const createStyledClone = (element: HTMLElement) => {
-  const clone = element.cloneNode(true) as HTMLElement;
-  copyComputedStyles(element, clone);
-  return clone;
-};
-
-const createPdfClone = (element: HTMLElement) => {
-  const { width, height } = element.getBoundingClientRect();
-  const clone = createStyledClone(element);
-  const container = document.createElement("div");
-
-  clone.style.width = `${width}px`;
-  clone.style.minWidth = `${width}px`;
-  clone.style.maxWidth = `${width}px`;
-  clone.style.height = "auto";
-  clone.style.minHeight = `${height}px`;
-  clone.style.backgroundColor = "#ffffff";
-
-  container.style.position = "fixed";
-  container.style.left = "-100000px";
-  container.style.top = "0";
-  container.style.width = `${width}px`;
-  container.style.backgroundColor = "#ffffff";
-  container.style.pointerEvents = "none";
-  container.appendChild(clone);
-  document.body.appendChild(container);
-
-  const cleanup = () => {
-    container.remove();
-  };
-
-  return { clone, cleanup };
-};
-
 const createWordDocument = (element: HTMLElement, title: string) => {
-  const clone = createStyledClone(element);
+  const clone = element.cloneNode(true) as HTMLElement;
 
   return `
     <!DOCTYPE html>
@@ -223,13 +67,6 @@ const getDownloadName = (name: string, format: DownloadFormat) => {
 
   return `${cleanName || "resume"}.${format}`;
 };
-
-const waitForPaint = () =>
-  new Promise<void>((resolve) => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => resolve());
-    });
-  });
 
 const ResumeForm = ({
   selectedTemplate,
@@ -381,43 +218,7 @@ const ResumeForm = ({
 
     try {
       if (downloadFormat === "pdf") {
-        const html2pdf = (await import("html2pdf.js")).default;
-        const restorePreviewStyles = applyPdfSafeStyles(previewElement);
-        await waitForPaint();
-        const { clone, cleanup } = createPdfClone(previewElement);
-        await waitForPaint();
-        const pdfWidth = Math.ceil(clone.scrollWidth);
-        const pdfHeight = Math.ceil(clone.scrollHeight);
-
-        try {
-          await html2pdf()
-            .set({
-              filename: fileName,
-              margin: 0,
-              image: { type: "jpeg", quality: 0.98 },
-              html2canvas: {
-                backgroundColor: "#ffffff",
-                scale: 2,
-                useCORS: true,
-                width: pdfWidth,
-                height: pdfHeight,
-                windowWidth: pdfWidth,
-                windowHeight: pdfHeight,
-              },
-              jsPDF: {
-                unit: "px",
-                format: [pdfWidth, pdfHeight],
-                orientation: "portrait",
-              },
-             
-            })
-            .from(clone)
-            .save();
-        } finally {
-          cleanup();
-          restorePreviewStyles();
-        }
-
+        await downloadResumePdf(previewElement, fileName);
         return;
       }
 
@@ -564,7 +365,7 @@ const ResumeForm = ({
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-[1320px] gap-6 grid-cols-1 xl:grid-cols-[minmax(0,1fr)_clamp(350px,50%,850px)]">
         <div className="space-y-6">
           <Card>
             <div className="mb-6">
@@ -613,7 +414,7 @@ const ResumeForm = ({
           {renderActiveSection()}
         </div>
 
-        <div className="sticky top-6 h-fit">
+        <div className="sticky top-6 min-h-screen pb-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -646,9 +447,9 @@ const ResumeForm = ({
             </div>
           </div>
 
-          <div ref={resumePreviewRef}>
+          <ResumePreview ref={resumePreviewRef}>
             <ActiveTemplate key={currentTemplate.id} data={previewData} />
-          </div>
+          </ResumePreview>
         </div>
       </div>
     </div>

@@ -17,7 +17,8 @@ export type ResumePreviewData = {
 };
 
 type ResumePreviewProps = {
-  data: ResumePreviewData;
+  children: ReactNode;
+  className?: string;
 };
 
 const ResumePreview = forwardRef<HTMLDivElement, ResumePreviewProps>(

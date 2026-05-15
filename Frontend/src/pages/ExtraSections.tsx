@@ -3,12 +3,10 @@ import {
   Brain,
   CheckCircle,
   Download,
-  FileText,
   Gauge,
   HelpCircle,
   LayoutTemplate,
   Rocket,
-  Sparkles,
   Star,
   Wand2,
 } from "lucide-react";
@@ -35,12 +33,17 @@ const HomeExtraSections = () => {
   }, []);
 
   const templates = [
-    { name: "ATS Resume", templateId: "ats" },
-    { name: "Frontend Engineer", templateId: "frontend" },
-    { name: "Modern Template", templateId: "modern" },
-    { name: "Minimal Resume", templateId: "minimal" },
-    { name: "Backend Engineer", templateId: "backend" },
-    { name: "Full Stack Engineer", templateId: "fullstack" },
+    { name: "ATS Resume", templateId: "ats", image:"/images/ChatGPT Image May 15, 2026, 02_59_43 PM.png" },
+
+    { name: "Frontend Engineer", templateId: "frontend", image:"/images/ChatGPT Image May 15, 2026, 03_17_08 PM.png" },
+
+    { name: "Modern Template", templateId: "modern", image:"/images/ChatGPT Image May 15, 2026, 03_19_58 PM.png" },
+
+    { name: "Minimal Resume", templateId: "minimal", image:"/images/ChatGPT Image May 15, 2026, 03_28_50 PM.png" },
+
+    { name: "Backend Engineer", templateId: "backend", image:"/images/ChatGPT Image May 15, 2026, 03_47_57 PM.png" },
+
+    { name: "Full Stack Engineer", templateId: "fullstack", image:"/images/ChatGPT Image May 15, 2026, 03_23_53 PM.png" },
   ];
 
   const handleTemplateClick = (templateId: string) => {
@@ -61,7 +64,7 @@ const HomeExtraSections = () => {
         {/* Templates Showcase */}
         <section>
           <div className="text-center">
-            <p className="text-sm font-semibold text-purple-300">
+            <p className="text-xl font-semibold text-purple-300">
               Resume Templates
             </p>
             <h2 className="mt-3 text-4xl font-black">
@@ -80,7 +83,10 @@ const HomeExtraSections = () => {
                 className="group rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-purple-400/50 hover:bg-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20"
               >
                 <div className="mb-5 flex h-36 items-center justify-center rounded-2xl bg-white text-gray-900 transition duration-500 group-hover:scale-105">
-                  <FileText size={50} className="text-purple-600" />
+                  <img
+                  src={template.image}
+                  alt={template.name} 
+                  className="h-full w-full rounded-xl object-cover object-top" />
                 </div>
 
                 <h3 className="text-xl font-bold">{template.name}</h3>

@@ -12,7 +12,52 @@ import HomeExtraSections from "./ExtraSections";
 
 import "../index.css";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+const resumePreviewImages = [
+  {
+    src: "/67b6cb1f0620a4382b2a325a_Blue and Gray Simple Professional CV Resume.webp",
+    alt: "Classic resume template preview",
+  },
+  {
+    src: "/ChatGPT Image May 15, 2026, 10_40_22 AM.png",
+    alt: "AI resume template preview",
+  },
+  {
+    src: "Professional-Two-Page-Resume-Template-edit-online.png",
+    alt: "Clean resume template preview",
+  },
+  {
+    src: "resume-template-resumelab-ceramica@2x.png",
+    alt: "Sidebar resume template preview",
+  },
+  {
+    src: "ChatGPT Image May 15, 2026, 12_41_37 PM.png",
+    alt: "Bold resume template preview",
+  },
+  {
+    src: "Simple-CV_Template-724x1024.png",
+    alt: "Minimal resume template preview",
+  },
+  {
+    src: "ChatGPT Image May 15, 2026, 12_27_00 PM.png",
+    alt: "Accent resume template preview",
+  },
+];
+
 const Home = () => {
+  const [activeResumeIndex, setActiveResumeIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveResumeIndex((currentIndex) =>
+        (currentIndex + 1) % resumePreviewImages.length
+      );
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <>
       <nav>
@@ -52,13 +97,13 @@ const Home = () => {
 
         <main className="relative mx-auto max-w-7xl px-6 py-24">
           <section className="text-center">
-            <Badge className="bg-white/10 text-white ring-white/20">
+            <Badge className="bg-white/10 text-white ring-white/20 py-6 px-6">
               Future-Ready AI Resume Builder
             </Badge>
 
-            <div className="flex gap-8  ">
-              <div>
-                <h1 className="mx-auto mt-8 max-w-4xl font-black leading-tight md:text-6xl">
+            <div className="flex flex-col items-center gap-18 lg:flex-row">
+              <div className="flex-1">
+                <h1 className="mx-auto mt-8 max-w-4xl leading-tight md:text-6xl text-3xl font-extrabold rounded-2xl backdrop-blur-xl ">
                   Create resumes that look like they came from the future.
                 </h1>
 
@@ -67,12 +112,41 @@ const Home = () => {
                   preview, AI improvement, and recruiter-focused formatting.
                 </p>
               </div>
-              <div className="hover:shadow-xl">
-                <img
-                  className="rounded-xl transition-all ease-in-out   duration-800 hover:scale-110"
-                  src="https://media.istockphoto.com/id/852016894/photo/generic-resume-isolated-on-white.webp?a=1&b=1&s=612x612&w=0&k=20&c=vaJxz39vF1u4HSIdsjUUDSRHW8EmGcR7Qr7vSEw39w8="
-                  alt=""
-                />
+              <div className="group relative mt-5 flex h-[430px] w-full max-w-[430px] flex-none items-center justify-center">
+                {/* Glow Effect */}
+                <div className="absolute inset-0 rounded-3xl bg-purple-500/30 blur-3xl opacity-60 group-hover:opacity-100 transition-all duration-700 animate-pulse">
+                </div>
+
+                {resumePreviewImages.map((image, index) => {
+                  const position =
+                    (index - activeResumeIndex + resumePreviewImages.length) %
+                    resumePreviewImages.length;
+                  const isActive = position === 0;
+                  const isNext = position === 1;
+                  const isPrevious =
+                    position === resumePreviewImages.length - 1;
+
+                  return (
+                    <div
+                      key={image.src}
+                      className={`absolute transition-all duration-[1200ms] ease-in-out ${
+                        isActive
+                          ? "z-30 scale-100 translate-x-0 opacity-100"
+                          : isNext
+                          ? "z-20 scale-75 translate-x-36 opacity-35 rotate-[10deg]"
+                          : isPrevious
+                          ? "z-10 scale-75 -translate-x-36 opacity-35 rotate-[-10deg]"
+                          : "z-0 scale-50 translate-x-0 opacity-0"
+                      }`}
+                    >
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        className="animate-floating w-[330px] max-w-[78vw] rounded-3xl object-cover shadow-[0_20px_80px_rgba(168,85,247,0.6)]"
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="mt-16 flex flex-wrap justify-center gap-4">
@@ -174,10 +248,10 @@ const Home = () => {
             </div>
           </section>
         </main>
-         <HomeExtraSections />
+        <HomeExtraSections />
 
-         {/* your dashboard content */}
-      <Footer />
+        {/* your dashboard content */}
+        <Footer />
       </div>
     </>
   );

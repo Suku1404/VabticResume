@@ -159,6 +159,34 @@ const createStyledClone = (element: HTMLElement) => {
   return clone;
 };
 
+const createPdfClone = (element: HTMLElement) => {
+  const { width, height } = element.getBoundingClientRect();
+  const clone = createStyledClone(element);
+  const container = document.createElement("div");
+
+  clone.style.width = `${width}px`;
+  clone.style.minWidth = `${width}px`;
+  clone.style.maxWidth = `${width}px`;
+  clone.style.height = "auto";
+  clone.style.minHeight = `${height}px`;
+  clone.style.backgroundColor = "#ffffff";
+
+  container.style.position = "fixed";
+  container.style.left = "-100000px";
+  container.style.top = "0";
+  container.style.width = `${width}px`;
+  container.style.backgroundColor = "#ffffff";
+  container.style.pointerEvents = "none";
+  container.appendChild(clone);
+  document.body.appendChild(container);
+
+  const cleanup = () => {
+    container.remove();
+  };
+
+  return { clone, cleanup };
+};
+
 const createWordDocument = (element: HTMLElement, title: string) => {
   const clone = createStyledClone(element);
 
@@ -356,27 +384,37 @@ const ResumeForm = ({
         const html2pdf = (await import("html2pdf.js")).default;
         const restorePreviewStyles = applyPdfSafeStyles(previewElement);
         await waitForPaint();
+        const { clone, cleanup } = createPdfClone(previewElement);
+        await waitForPaint();
+        const pdfWidth = Math.ceil(clone.scrollWidth);
+        const pdfHeight = Math.ceil(clone.scrollHeight);
 
         try {
           await html2pdf()
             .set({
               filename: fileName,
+              margin: 0,
               image: { type: "jpeg", quality: 0.98 },
               html2canvas: {
                 backgroundColor: "#ffffff",
                 scale: 2,
                 useCORS: true,
+                width: pdfWidth,
+                height: pdfHeight,
+                windowWidth: pdfWidth,
+                windowHeight: pdfHeight,
               },
               jsPDF: {
-                unit: "in",
-                format: "a4",
+                unit: "px",
+                format: [pdfWidth, pdfHeight],
                 orientation: "portrait",
               },
              
             })
-            .from(previewElement)
+            .from(clone)
             .save();
         } finally {
+          cleanup();
           restorePreviewStyles();
         }
 

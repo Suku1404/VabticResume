@@ -4,8 +4,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 import {Home, Login, Register, NotFound, Templates, Dashboard,Builder} from '../pages/index'
 // layouts
+ 
 
-import { AuthLayout, DashboardLayout } from '../layout/index'
+import { SaveResume, AuthLayout, DashboardLayout } from '../layout/index'
 
 // ats routes
 import AtsScore from '../pages/ATSScore/AtsScore'
@@ -21,6 +22,7 @@ const AppRoutes = () => {
             <Route path='/user/notfound' element={<NotFound/>} />
             <Route path='/user/templates' element={<Templates/>} />
             <Route path='/dashboard' element={<Dashboard/>} />
+            <Route path='/my-resume/:id' element={<SaveResume/>} />
            <Route
             path="/authlayout"
             element={<AuthLayout>Auth Layout Preview</AuthLayout>}

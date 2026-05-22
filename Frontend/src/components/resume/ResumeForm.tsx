@@ -1,4 +1,8 @@
 import { useRef, useState } from "react";
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
+
+
 import {
   Check,
   ChevronLeft,
@@ -15,6 +19,8 @@ import { templateMap } from "../../templates";
 import type { ResumeData } from "../../templates/resume.types";
 import { getTemplateById, templates } from "../../data/template";
 import { downloadResumePdf } from "../../utils/downloadResumePdf";
+
+
 
 const editorSections = [
   { id: "personal", label: "Personal" },
@@ -46,6 +52,12 @@ const createWordDocument = (element: HTMLElement, title: string) => {
   `;
 };
 
+
+
+
+
+
+
 const downloadBlob = (content: string, fileName: string, mimeType: string) => {
   const blob = new Blob(["\ufeff", content], { type: mimeType });
   const url = URL.createObjectURL(blob);
@@ -60,6 +72,7 @@ const downloadBlob = (content: string, fileName: string, mimeType: string) => {
 };
 
 const getDownloadName = (name: string, format: DownloadFormat) => {
+
   const cleanName = name
     .trim()
     .replace(/[^a-z0-9]+/gi, "-")
@@ -169,6 +182,7 @@ const ResumeForm = ({
     phone,
     location,
     summary,
+
     skills,
     education: educationSummary,
     experience: experienceSummary,
@@ -208,32 +222,81 @@ const ResumeForm = ({
     }
   };
 
+
   const downloadResume = async () => {
-    const previewElement = resumePreviewRef.current;
 
-    if (!previewElement) return;
+    if (!resumePreviewRef.current) return;
 
-    const fileName = getDownloadName(fullName, downloadFormat);
+    const fileName = getDownloadName(
+      fullName,
+      downloadFormat
+    );
+
     setIsDownloading(true);
 
     try {
+
+      // PDF DOWNLOAD
       if (downloadFormat === "pdf") {
         await downloadResumePdf(previewElement, fileName);
         return;
       }
 
-      const documentContent = createWordDocument(
-        previewElement,
-        `${currentTemplate.name} Resume`
-      );
+      // WORD DOWNLOAD
+      const documentContent =
+        createWordDocument(
+          resumePreviewRef.current,
+          `${currentTemplate.name} Resume`
+        );
 
       downloadBlob(
         documentContent,
         fileName,
         "application/msword;charset=utf-8"
       );
+
     } finally {
+
       setIsDownloading(false);
+
+    }
+  };
+
+   const navigate = useNavigate()
+  const saveResume = async () => {
+
+   
+    try {
+
+      const token = localStorage.getItem("token");
+
+      const resumeData = {
+        title: "Frontend Resume",
+
+
+        education,
+        experience,
+        skills,
+      };
+
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/save-resume",
+        resumeData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+
+      navigate("/my-resume");
+
+    } catch (error) {
+
+      console.log(error);
+
     }
   };
 
@@ -251,10 +314,18 @@ const ResumeForm = ({
 
       <Button
         type="button"
-        onClick={goToNextSection}
-        rightIcon={
-          isLastSection ? <Check size={17} /> : <ChevronRight size={17} />
-        }
+        onClick={async () => {
+
+          if (isLastSection) {
+
+            await saveResume();
+
+          } else {
+
+            goToNextSection();
+
+          }
+        }}
       >
         {isLastSection ? "Finish" : "Save & Next"}
       </Button>
@@ -387,20 +458,18 @@ const ResumeForm = ({
                     key={section.id}
                     type="button"
                     onClick={() => goToSection(section.id)}
-                    className={`flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2 text-left text-sm font-semibold transition ${
-                      isActive
-                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                        : "border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:bg-gray-50"
-                    }`}
+                    className={`flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2 text-left text-sm font-semibold transition ${isActive
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:bg-gray-50"
+                      }`}
                   >
                     <span
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs ${
-                        isComplete
-                          ? "bg-indigo-600 text-white"
-                          : isActive
-                            ? "bg-indigo-100 text-indigo-700"
-                            : "bg-gray-100 text-gray-500"
-                      }`}
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs ${isComplete
+                        ? "bg-indigo-600 text-white"
+                        : isActive
+                          ? "bg-indigo-100 text-indigo-700"
+                          : "bg-gray-100 text-gray-500"
+                        }`}
                     >
                       {isComplete ? <Check size={16} /> : index + 1}
                     </span>
@@ -447,9 +516,18 @@ const ResumeForm = ({
             </div>
           </div>
 
+<<<<<<< HEAD
+          <div
+            ref={resumePreviewRef}>
+
+            <ActiveTemplate key={currentTemplate.id}
+              data={previewData} />
+          </div>
+=======
           <ResumePreview ref={resumePreviewRef}>
             <ActiveTemplate key={currentTemplate.id} data={previewData} />
           </ResumePreview>
+>>>>>>> 6cdac3020b2aa2fd323e1c4f593baaafa212ce33
         </div>
       </div>
     </div>

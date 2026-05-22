@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { useNavigate,Link } from "react-router-dom";
+
 import {
   Bell,
   FileText,
@@ -23,11 +25,11 @@ type DashboardLayoutProps = {
 
 const menuItems = [
   { label: "Dashboard", icon: Home },
-  { label: "My Resumes", icon: FileText },
-  { label: "Templates", icon: LayoutTemplate },
+  { label: "My Resumes", icon: FileText, path: "/my-resume/:id"},
+  { label: "Templates", icon: LayoutTemplate , path: "/user/templates" },
   { label: "AI Assistant", icon: Sparkles },
   { label: "Profile", icon: User },
-  { label: "Settings", icon: Settings },
+  // { label: "Settings", icon: Settings },
 ];
 
 const DashboardLayout = ({
@@ -35,6 +37,8 @@ const DashboardLayout = ({
   activeItem = "Dashboard",
 }: DashboardLayoutProps) => {
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-[#030712] text-white">
@@ -82,6 +86,11 @@ const DashboardLayout = ({
                     ? "bg-linear-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25"
                     : "text-gray-400 hover:bg-white/10 hover:text-white"
                 )}
+                onClick={() => {
+                  if (item.path) {
+                    navigate(item.path);
+                  }
+                }}
               >
                 <Icon size={20} />
                 {item.label}
@@ -129,7 +138,7 @@ const DashboardLayout = ({
                 <span className="absolute right-3 top-3 h-2 w-2 rounded-full bg-violet-400" />
               </button>
 
-              <Button size="sm">Create Resume</Button>
+              <Button size="sm"><Link to={"/user/templates"}>Create Resume</Link></Button>
 
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 font-bold" title="User Profile">
                 S

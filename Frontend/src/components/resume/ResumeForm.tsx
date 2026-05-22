@@ -24,7 +24,7 @@ const editorSections = [
 ] as const;
 
 type EditorSectionId = (typeof editorSections)[number]["id"];
-type DownloadFormat = "pdf" | "doc";
+type DownloadFormat = "pdf" | "doc"
 
 const downloadOptions = [
   { label: "PDF", value: "pdf" },

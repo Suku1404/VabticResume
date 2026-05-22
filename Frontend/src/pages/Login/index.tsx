@@ -35,7 +35,7 @@ const handleSubmit  = async (e:SubmitEvent<HTMLFormElement>) => {
           ,{
             withCredentials:true
         })
-        navigate("/dashboard")
+        navigate("/dashboardLayout")
       } catch (error:any) {
         console.log("Error res:", error.response?.data);
         

@@ -1,5 +1,38 @@
 @import "tailwindcss";
 
+/* ================================================================
+   TAILWIND v4 — CLASS-BASED DARK MODE
+   Without this, ALL dark: utility classes are completely ignored.
+   This tells Tailwind v4 to apply dark: styles when .dark is present
+   on any ancestor element (ThemeContext adds it to <html>).
+   ================================================================ */
+@variant dark (&:where(.dark, .dark *));
+
+
+
+/* ================================================================
+   BASE THEME — light/dark switching via html.dark class
+   ================================================================ */
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #ffffff;
+  color: #0f172a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark body {
+  background-color: #030712;
+  color: #ffffff;
+}
+
+
+
 @keyframes modalPop {
   from {
     opacity: 0;

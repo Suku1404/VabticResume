@@ -44,7 +44,8 @@ const RegisterUser = async (req: Request, res: Response) => {
 
     res.status(201).json({
         message: "User Registerd Successful",
-        user: newUser.rows[0]
+        user: newUser.rows[0],
+        token
     });
 }
 
@@ -87,8 +88,9 @@ const LoginUser = async (req: Request, res: Response) => {
     });
 
     res.status(201).json({
-        message: "User Login  Successful",
-        user: user.rows[0]
+        message: "User Login Successful",
+        user: user.rows[0],
+        token
     });
 
 }

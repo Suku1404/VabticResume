@@ -130,9 +130,10 @@ router.post('/ats-check-score', upload.single('resume'), async (req, res) => {
 
     if (req.file.mimetype === 'application/pdf') {
       try {
-        const parser = new PDFParse({ data: req.file.buffer })
+        const parser = new PDFParse({ data: new Uint8Array(req.file.buffer), verbosity: 0 })
+        await parser.load()
         const pdfData = await parser.getText()
-        resumeText = pdfData.text
+        resumeText = pdfData.text || ''
 
         console.log('Extracted text length:', resumeText.length)
       } catch (pdfError: any) {

@@ -5,3 +5,5 @@ export { default as Login } from "./Login/Login";
 export { default as NotFound } from "./NotFound";
 export { default as Register } from "./Register";
 export { default as Templates } from "./Templates";
+export { default as AiResumeImprove } from "./AiResumeImprove";
+export { default as Profile } from "./Profile";

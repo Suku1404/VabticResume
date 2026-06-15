@@ -10,7 +10,7 @@ const Card = ({ children, hover = true, className, ...props }: CardProps) => {
   return (
     <div
       className={clsx(
-        "rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300",
+        "rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 dark:border-white/10 dark:bg-slate-900",
         hover && "hover:-translate-y-1 hover:shadow-xl",
         className
       )}
@@ -26,15 +26,15 @@ const CardHeader = ({ children, className }: { children: ReactNode; className?: 
 );
 
 const CardTitle = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <h3 className={clsx("text-lg font-bold text-gray-900", className)}>{children}</h3>
+  <h3 className={clsx("text-lg font-bold text-gray-900 dark:text-white", className)}>{children}</h3>
 );
 
 const CardDescription = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <p className={clsx("mt-1 text-sm text-gray-500", className)}>{children}</p>
+  <p className={clsx("mt-1 text-sm text-gray-500 dark:text-gray-400", className)}>{children}</p>
 );
 
 const CardContent = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <div className={clsx("text-sm text-gray-700", className)}>{children}</div>
+  <div className={clsx("text-sm text-gray-700 dark:text-gray-300", className)}>{children}</div>
 );
 
 const CardFooter = ({ children, className }: { children: ReactNode; className?: string }) => (

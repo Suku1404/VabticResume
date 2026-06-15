@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 import {
   Check,
   ChevronLeft,
-  ChevronRight,
   Download,
   Sparkles,
 } from "lucide-react";
@@ -238,7 +238,7 @@ const ResumeForm = ({
 
       // PDF DOWNLOAD
       if (downloadFormat === "pdf") {
-        await downloadResumePdf(previewElement, fileName);
+        await downloadResumePdf(resumePreviewRef.current, fileName);
         return;
       }
 
@@ -262,18 +262,21 @@ const ResumeForm = ({
     }
   };
 
-   const navigate = useNavigate()
+  const navigate = useNavigate();
   const saveResume = async () => {
-
-   
     try {
-
       const token = localStorage.getItem("token");
 
       const resumeData = {
-        title: "Frontend Resume",
-
-
+        title: title || "My Resume",
+        personalInfo: {
+          fullName,
+          title,
+          email,
+          phone,
+          location,
+          summary,
+        },
         education,
         experience,
         skills,
@@ -289,14 +292,12 @@ const ResumeForm = ({
         }
       );
 
-      console.log(response.data);
-
-      navigate("/my-resume");
-
-    } catch (error) {
-
-      console.log(error);
-
+      console.log("Save resume success:", response.data);
+      toast.success("Resume saved successfully in PostgreSQL!");
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Save resume error:", error);
+      toast.error("Failed to save resume. Make sure you are logged in.");
     }
   };
 
@@ -516,18 +517,9 @@ const ResumeForm = ({
             </div>
           </div>
 
-<<<<<<< HEAD
-          <div
-            ref={resumePreviewRef}>
-
-            <ActiveTemplate key={currentTemplate.id}
-              data={previewData} />
-          </div>
-=======
           <ResumePreview ref={resumePreviewRef}>
             <ActiveTemplate key={currentTemplate.id} data={previewData} />
           </ResumePreview>
->>>>>>> 6cdac3020b2aa2fd323e1c4f593baaafa212ce33
         </div>
       </div>
     </div>

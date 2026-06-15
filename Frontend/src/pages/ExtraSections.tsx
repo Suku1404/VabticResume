@@ -20,9 +20,16 @@ const HomeExtraSections = () => {
   // Check if user is logged in
   useEffect(() => {
     const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
       try {
         const response = await fetch("http://localhost:3000/api/auth/user/profile", {
-          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         setIsLoggedIn(response.ok);
       } catch {
@@ -58,19 +65,19 @@ const HomeExtraSections = () => {
   };
 
   return (
-    <div className="bg-[#030712] px-6 pb-24 text-white">
+    <div className="bg-white dark:bg-[#030712] px-6 pb-24 text-slate-900 dark:text-white transition-colors duration-300">
       <div className="mx-auto max-w-7xl space-y-24">
 
         {/* Templates Showcase */}
         <section>
           <div className="text-center">
-            <p className="text-xl font-semibold text-purple-300">
+            <p className="text-xl font-semibold text-purple-600 dark:text-purple-300">
               Resume Templates
             </p>
-            <h2 className="mt-3 text-4xl font-black">
+            <h2 className="mt-3 text-4xl font-black text-slate-900 dark:text-white">
               Choose Templates Built for Modern Hiring
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-gray-400">
+            <p className="mx-auto mt-4 max-w-2xl text-gray-600 dark:text-gray-400">
               Select ATS-friendly, recruiter-focused templates designed for
               freshers, developers, and future MAANG engineers.
             </p>
@@ -80,7 +87,7 @@ const HomeExtraSections = () => {
             {templates.map((template) => (
               <div
                 key={template.templateId}
-                className="group rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-purple-400/50 hover:bg-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20"
+                className="group rounded-3xl border border-gray-100 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-purple-400/50 hover:bg-purple-50 dark:hover:bg-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20"
               >
                 <div className="mb-5 flex h-36 items-center justify-center rounded-2xl bg-white text-gray-900 transition duration-500 group-hover:scale-105">
                   <img
@@ -89,15 +96,15 @@ const HomeExtraSections = () => {
                   className="h-full w-full rounded-xl object-cover object-top" />
                 </div>
 
-                <h3 className="text-xl font-bold">{template.name}</h3>
-                <p className="mt-2 text-sm text-gray-400">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{template.name}</h3>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                   Clean, professional, and optimized for applicant tracking
                   systems.
                 </p>
 
                 <button
                   onClick={() => handleTemplateClick(template.templateId)}
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-purple-300 transition duration-300 hover:gap-3 hover:text-white cursor-pointer"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-300 transition duration-300 hover:gap-3 hover:text-purple-800 dark:hover:text-white cursor-pointer"
                 >
                   Use Template <ArrowRight size={16} />
                 </button>
@@ -109,10 +116,10 @@ const HomeExtraSections = () => {
         {/* How It Works */}
         <section>
           <div className="text-center">
-            <p className="text-sm font-semibold text-purple-300">
+            <p className="text-sm font-semibold text-purple-600 dark:text-purple-300">
               Simple Process
             </p>
-            <h2 className="mt-3 text-4xl font-black">
+            <h2 className="mt-3 text-4xl font-black text-slate-900 dark:text-white">
               Build Your Resume in 3 Simple Steps
             </h2>
           </div>
@@ -140,18 +147,18 @@ const HomeExtraSections = () => {
               return (
                 <div
                   key={step.title}
-                  className="relative rounded-3xl border border-white/10 bg-white/5 p-8 transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:shadow-xl hover:shadow-indigo-500/20"
+                  className="relative rounded-3xl border border-gray-100 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-8 transition-all duration-500 hover:-translate-y-2 hover:bg-gray-100 dark:hover:bg-white/10 hover:shadow-xl hover:shadow-indigo-500/20"
                 >
-                  <span className="absolute right-6 top-6 text-5xl font-black text-white/5">
+                  <span className="absolute right-6 top-6 text-5xl font-black text-gray-200 dark:text-white/5">
                     0{index + 1}
                   </span>
 
-                  <div className="mb-6 inline-flex rounded-2xl bg-purple-500/20 p-4 text-purple-300">
+                  <div className="mb-6 inline-flex rounded-2xl bg-purple-100 dark:bg-purple-500/20 p-4 text-purple-600 dark:text-purple-300">
                     <Icon size={28} />
                   </div>
 
-                  <h3 className="text-xl font-bold">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-gray-400">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">{step.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-gray-500 dark:text-gray-400">
                     {step.text}
                   </p>
                 </div>
@@ -161,16 +168,16 @@ const HomeExtraSections = () => {
         </section>
 
         {/* AI Features */}
-        <section className="rounded-4xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
+        <section className="rounded-3xl border border-gray-100 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-8 backdrop-blur-xl">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             <div>
-              <p className="text-sm font-semibold text-purple-300">
+              <p className="text-sm font-semibold text-purple-600 dark:text-purple-300">
                 AI Powered
               </p>
-              <h2 className="mt-3 text-4xl font-black">
+              <h2 className="mt-3 text-4xl font-black text-slate-900 dark:text-white">
                 AI That Helps You Get Shortlisted Faster
               </h2>
-              <p className="mt-4 text-gray-400">
+              <p className="mt-4 text-gray-600 dark:text-gray-400">
                 Improve weak resume sections, detect missing keywords, and make
                 your profile more recruiter-friendly.
               </p>
@@ -186,27 +193,37 @@ const HomeExtraSections = () => {
                 ].map((feature) => (
                   <div
                     key={feature}
-                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#030712]/60 p-4 transition duration-300 hover:border-purple-400/50 hover:bg-purple-500/10"
+                    className="flex items-center gap-3 rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#030712]/60 p-4 transition duration-300 hover:border-purple-400/50 hover:bg-purple-50 dark:hover:bg-purple-500/10"
                   >
-                    <CheckCircle size={18} className="text-purple-300" />
-                    <span className="text-sm text-gray-300">{feature}</span>
+                    <CheckCircle size={18} className="text-purple-600 dark:text-purple-300" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-3xl border border-purple-400/20 bg-[#080b1a] p-8 shadow-2xl shadow-purple-500/20">
-              <div className="mb-6 inline-flex rounded-2xl bg-purple-500/20 p-4 text-purple-300">
+            <div className="rounded-3xl border border-purple-400/20 bg-purple-50 dark:bg-[#080b1a] p-8 shadow-2xl shadow-purple-500/20">
+              <div className="mb-6 inline-flex rounded-2xl bg-purple-100 dark:bg-purple-500/20 p-4 text-purple-600 dark:text-purple-300">
                 <Brain size={36} />
               </div>
 
-              <h3 className="text-2xl font-bold">AI Resume Assistant</h3>
-              <p className="mt-3 text-gray-400">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">AI Resume Assistant</h3>
+              <p className="mt-3 text-gray-600 dark:text-gray-400">
                 “Your project descriptions are good, but adding measurable
                 impact can improve recruiter attention.”
               </p>
 
-              <button className="mt-8 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 font-semibold transition duration-500 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30">
+              <button
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    localStorage.setItem("redirectAI", "true");
+                    navigate("/user/register");
+                  } else {
+                    navigate("/ai-resume-improve");
+                  }
+                }}
+                className="mt-8 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 font-semibold transition duration-500 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30 cursor-pointer"
+              >
                 Improve With AI
               </button>
             </div>
@@ -216,8 +233,8 @@ const HomeExtraSections = () => {
         {/* ATS Demo */}
         <section>
           <div className="text-center">
-            <p className="text-sm font-semibold text-purple-300">ATS Demo</p>
-            <h2 className="mt-3 text-4xl font-black">
+            <p className="text-sm font-semibold text-purple-600 dark:text-purple-300">ATS Demo</p>
+            <h2 className="mt-3 text-4xl font-black text-slate-900 dark:text-white">
               See Your Resume Score Improve
             </h2>
           </div>
@@ -237,10 +254,10 @@ const HomeExtraSections = () => {
           ].map(([number, label]) => (
             <div
               key={label}
-              className="rounded-3xl border border-white/10 bg-white/5 p-8 text-center transition duration-500 hover:-translate-y-2 hover:bg-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20"
+              className="rounded-3xl border border-gray-100 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-8 text-center transition duration-500 hover:-translate-y-2 hover:bg-purple-50 dark:hover:bg-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20"
             >
-              <h3 className="text-5xl font-black text-purple-300">{number}</h3>
-              <p className="mt-3 text-gray-400">{label}</p>
+              <h3 className="text-5xl font-black text-purple-600 dark:text-purple-300">{number}</h3>
+              <p className="mt-3 text-gray-500 dark:text-gray-400">{label}</p>
             </div>
           ))}
         </section>
@@ -248,10 +265,10 @@ const HomeExtraSections = () => {
         {/* Testimonials */}
         <section>
           <div className="text-center">
-            <p className="text-sm font-semibold text-purple-300">
+            <p className="text-sm font-semibold text-purple-600 dark:text-purple-300">
               Testimonials
             </p>
-            <h2 className="mt-3 text-4xl font-black">
+            <h2 className="mt-3 text-4xl font-black text-slate-900 dark:text-white">
               Trusted by Students and Developers
             </h2>
           </div>
@@ -264,16 +281,16 @@ const HomeExtraSections = () => {
             ].map((review, index) => (
               <div
                 key={index}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6 transition duration-500 hover:-translate-y-2 hover:bg-white/10"
+                className="rounded-3xl border border-gray-100 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-6 transition duration-500 hover:-translate-y-2 hover:bg-gray-100 dark:hover:bg-white/10"
               >
-                <div className="mb-4 flex gap-1 text-yellow-300">
+                <div className="mb-4 flex gap-1 text-yellow-400">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star key={star} size={18} fill="currentColor" />
                   ))}
                 </div>
 
-                <p className="text-sm leading-6 text-gray-300">“{review}”</p>
-                <p className="mt-5 font-semibold text-purple-300">
+                <p className="text-sm leading-6 text-gray-600 dark:text-gray-300">“{review}”</p>
+                <p className="mt-5 font-semibold text-purple-600 dark:text-purple-300">
                   Student Developer
                 </p>
               </div>
@@ -284,8 +301,8 @@ const HomeExtraSections = () => {
         {/* FAQ */}
         <section>
           <div className="text-center">
-            <p className="text-sm font-semibold text-purple-300">FAQ</p>
-            <h2 className="mt-3 text-4xl font-black">
+            <p className="text-sm font-semibold text-purple-600 dark:text-purple-300">FAQ</p>
+            <h2 className="mt-3 text-4xl font-black text-slate-900 dark:text-white">
               Frequently Asked Questions
             </h2>
           </div>
@@ -311,11 +328,11 @@ const HomeExtraSections = () => {
             ].map((item) => (
               <details
                 key={item.q}
-                className="group rounded-2xl border border-white/10 bg-white/5 p-5 transition duration-300 open:bg-purple-500/10"
+                className="group rounded-2xl border border-gray-100 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-5 transition duration-300 open:bg-purple-50 dark:open:bg-purple-500/10"
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between font-semibold">
+                <summary className="flex cursor-pointer list-none items-center justify-between font-semibold text-slate-900 dark:text-white">
                   <span className="flex items-center gap-3">
-                    <HelpCircle size={18} className="text-purple-300" />
+                    <HelpCircle size={18} className="text-purple-600 dark:text-purple-300" />
                     {item.q}
                   </span>
                   <span className="transition duration-300 group-open:rotate-45">
@@ -323,7 +340,7 @@ const HomeExtraSections = () => {
                   </span>
                 </summary>
 
-                <p className="mt-4 text-sm leading-6 text-gray-400">{item.a}</p>
+                <p className="mt-4 text-sm leading-6 text-gray-500 dark:text-gray-400">{item.a}</p>
               </details>
             ))}
           </div>
@@ -375,28 +392,28 @@ const ScoreCard = ({
     <div
       className={`rounded-3xl border p-8 transition duration-500 hover:-translate-y-2 ${
         active
-          ? "border-purple-400/50 bg-purple-500/10 shadow-xl shadow-purple-500/20"
-          : "border-white/10 bg-white/5"
+          ? "border-purple-400/50 bg-purple-50 dark:bg-purple-500/10 shadow-xl shadow-purple-500/20"
+          : "border-gray-100 dark:border-white/10 bg-gray-50 dark:bg-white/5"
       }`}
     >
       <div className="mb-6 flex items-center gap-3">
-        <Gauge className={active ? "text-purple-300" : "text-gray-400"} />
-        <h3 className="text-xl font-bold">{title}</h3>
+        <Gauge className={active ? "text-purple-600 dark:text-purple-300" : "text-gray-400"} />
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{title}</h3>
       </div>
 
-      <p className="text-5xl font-black">{score}</p>
+      <p className="text-5xl font-black text-slate-900 dark:text-white">{score}</p>
 
-      <div className="mt-6 h-3 overflow-hidden rounded-full bg-white/10">
+      <div className="mt-6 h-3 overflow-hidden rounded-full bg-gray-200 dark:bg-white/10">
         <div
           className={`h-full rounded-full transition-all duration-1000 ${
             active
               ? "bg-gradient-to-r from-purple-500 to-indigo-500"
-              : "bg-gray-500"
+              : "bg-gray-400 dark:bg-gray-500"
           } ${width}`}
         />
       </div>
 
-      <p className="mt-4 text-sm text-gray-400">
+      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
         {active
           ? "Optimized with AI suggestions, better keywords, and strong formatting."
           : "Missing keywords, weak summary, and low recruiter readability."}

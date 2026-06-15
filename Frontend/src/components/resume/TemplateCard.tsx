@@ -23,7 +23,7 @@ const TemplateCard = ({
 }: TemplateCardProps) => {
   return (
     <Card className="group overflow-hidden p-0">
-      <div className="relative h-56 overflow-hidden bg-linear-to-br from-gray-100 to-gray-200">
+      <div className="relative h-56 overflow-hidden bg-linear-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-950">
         {image ? (
           <img
             src={image}
@@ -32,16 +32,16 @@ const TemplateCard = ({
           />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <div className="h-40 w-28 rounded-xl bg-white p-4 shadow-lg">
-              <div className="mb-3 h-3 w-20 rounded bg-gray-900" />
+            <div className="h-40 w-28 rounded-xl bg-white dark:bg-slate-950 p-4 shadow-lg border border-gray-100 dark:border-white/5">
+              <div className="mb-3 h-3 w-20 rounded bg-gray-900 dark:bg-indigo-500" />
               <div className="space-y-2">
-                <div className="h-2 rounded bg-gray-300" />
-                <div className="h-2 rounded bg-gray-300" />
-                <div className="h-2 w-16 rounded bg-gray-300" />
+                <div className="h-2 rounded bg-gray-300 dark:bg-slate-800" />
+                <div className="h-2 rounded bg-gray-300 dark:bg-slate-800" />
+                <div className="h-2 w-16 rounded bg-gray-300 dark:bg-slate-800" />
               </div>
               <div className="mt-4 space-y-2">
-                <div className="h-2 rounded bg-indigo-200" />
-                <div className="h-2 rounded bg-indigo-200" />
+                <div className="h-2 rounded bg-indigo-200 dark:bg-indigo-950" />
+                <div className="h-2 rounded bg-indigo-200 dark:bg-indigo-950" />
               </div>
             </div>
           </div>
@@ -59,8 +59,8 @@ const TemplateCard = ({
       </div>
 
       <div className="p-5">
-        <h3 className="text-lg font-bold text-gray-900">{title}</h3>
-        <p className="mt-1 text-sm text-gray-500">{description}</p>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>
 
         <div className="mt-5 flex gap-3">
           <Button fullWidth onClick={onSelect}>

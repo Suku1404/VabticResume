@@ -36,9 +36,9 @@ const Button = ({
     secondary:
       "bg-gray-900 text-white shadow-md hover:bg-gray-800 focus:ring-gray-700",
     outline:
-      "border border-gray-300 bg-white text-gray-800 hover:bg-gray-100 focus:ring-gray-300",
+      "border border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 focus:ring-gray-300 dark:focus:ring-white/20",
     ghost:
-      "bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-300",
+      "bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 focus:ring-gray-300 dark:focus:ring-white/20",
     danger:
       "bg-red-600 text-white shadow-lg shadow-red-500/25 hover:bg-red-700 focus:ring-red-500",
   };

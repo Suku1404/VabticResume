@@ -83,9 +83,12 @@ ${resumeText.slice(0, 5000)}
             parts: [{ text: prompt }],
           },
         ],
+        generationConfig: {
+          responseMimeType: "application/json"
+        }
       },
       {
-        timeout: 15000,
+        timeout: 30000,
       }
     );
 

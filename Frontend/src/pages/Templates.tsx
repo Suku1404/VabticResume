@@ -16,13 +16,13 @@ const Templates = () => {
 
   return (
     <>
-    <div className="min-h-screen bg-gray-100 p-10">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#030712] text-slate-800 dark:text-white p-10 transition-colors duration-300">
       <div className="mb-10">
-        <h1 className="mb-3 text-5xl font-bold">
+        <h1 className="mb-3 text-5xl font-bold text-slate-900 dark:text-white">
           Resume Templates
         </h1>
 
-        <p className="text-lg text-gray-500">
+        <p className="text-lg text-gray-500 dark:text-gray-400">
           Choose reusable templates for different roles.
         </p>
       </div>

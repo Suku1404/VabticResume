@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { User, Mail, Calendar, Shield, Edit2, Save, X, Key, Trash2 } from "lucide-react";
+import { User, Mail, Shield, Edit2, Save, X, Key, Trash2 } from "lucide-react";
 import { Button, Card } from "../components/common";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface UserProfile {
   id: number;
@@ -28,15 +28,11 @@ const Profile = () => {
           navigate("/user/login");
           return;
         }
-        // Decode JWT to get basic info (since no profile endpoint exists yet)
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        setProfile({
-          id: payload.id || 0,
-          name: payload.name || "User",
-          email: payload.email || "",
-          created_at: new Date().toISOString(),
+        const response = await axios.get("http://localhost:3000/api/auth/user/profile", {
+          headers: { Authorization: `Bearer ${token}` }
         });
-        setEditName(payload.name || "User");
+        setProfile(response.data);
+        setEditName(response.data.name || "");
       } catch (err) {
         toast.error("Failed to load profile.");
       } finally {
@@ -54,8 +50,19 @@ const Profile = () => {
     }
     setSaving(true);
     try {
-      // Optimistic update since we don't have a profile update endpoint yet
-      setProfile((prev) => prev ? { ...prev, name: editName } : prev);
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        "http://localhost:3000/api/auth/user/profile",
+        { name: editName },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        window.dispatchEvent(new Event("profileUpdated"));
+      }
+      
+      setProfile(response.data.user);
       setEditing(false);
       toast.success("Profile updated successfully!");
     } catch (err) {

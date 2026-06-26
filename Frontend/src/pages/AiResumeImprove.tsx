@@ -7,15 +7,13 @@ import {
   Upload,
   Sparkles,
   CheckCircle,
-  AlertTriangle,
   Lightbulb,
   FileText,
   Download,
   ArrowLeft,
-  ChevronLeft,
   Wand2,
 } from "lucide-react";
-import { Button, Card, Badge } from "../components/common";
+import { Button, Card } from "../components/common";
 import ATSResume from "../templates/ATSResume";
 import { downloadResumePdf } from "../utils/downloadResumePdf";
 

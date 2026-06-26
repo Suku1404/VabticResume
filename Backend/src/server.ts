@@ -1,11 +1,9 @@
 import dotenv from 'dotenv';
+dotenv.config(); // Load environment variables first
+
 import app from './app';
 import pool from "./db/db";
-
-
-
-
-dotenv.config();
+import "./modules/ai"; // Trigger environment validation on boot
 
 app.get("/", async (req, res) => {
   const result = await pool.query("SELECT NOW()");

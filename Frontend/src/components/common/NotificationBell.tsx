@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Bell, X, CheckCircle, Sparkles, FileText, Target, Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
 
 type NotifType = "ai" | "resume" | "ats" | "system";
 
@@ -20,45 +21,64 @@ const TYPE_META: Record<NotifType, { icon: React.ElementType; color: string; bg:
   system: { icon: CheckCircle, color: "text-blue-500 dark:text-blue-400", bg: "bg-blue-100 dark:bg-blue-500/20" },
 };
 
-const INITIAL_NOTIFICATIONS: Notification[] = [
-  {
-    id: "1",
-    type: "ai",
-    title: "AI Resume Improved",
-    message: "Your resume has been enhanced with AI suggestions. Download the updated PDF.",
-    time: "Just now",
-    read: false,
-  },
-  {
-    id: "2",
-    type: "ats",
-    title: "ATS Score Updated",
-    message: "Your latest resume scored 91% on ATS compatibility. Great job!",
-    time: "2 min ago",
-    read: false,
-  },
-  {
-    id: "3",
-    type: "resume",
-    title: "Resume Saved",
-    message: "Your resume \"MERN Stack Developer\" was saved successfully.",
-    time: "10 min ago",
-    read: true,
-  },
-  {
-    id: "4",
-    type: "system",
-    title: "Welcome to VabticResume",
-    message: "Start by choosing a template or uploading your existing resume for AI improvement.",
-    time: "1 hr ago",
-    read: true,
-  },
-];
+const formatRelativeTime = (dateString: string) => {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDays = Math.floor(diffHr / 24);
+
+    if (diffSec < 60) return "Just now";
+    if (diffMin < 60) return `${diffMin} min ago`;
+    if (diffHr < 24) return `${diffHr} hr ago`;
+    return `${diffDays} days ago`;
+  } catch (err) {
+    return "";
+  }
+};
 
 const NotificationBell = () => {
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const fetchNotifications = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      
+      const response = await axios.get("http://localhost:3000/api/notifications", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const mapped: Notification[] = response.data.map((n: any) => ({
+        id: n.id.toString(),
+        type: n.type as NotifType,
+        title: n.title,
+        message: n.message,
+        time: formatRelativeTime(n.created_at),
+        read: n.read
+      }));
+      setNotifications(mapped);
+    } catch (err) {
+      console.error("Failed to fetch notifications", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 10000); // Check for notifications every 10s
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      fetchNotifications();
+    }
+  }, [open]);
 
   const unread = notifications.filter((n) => !n.read).length;
 
@@ -73,23 +93,48 @@ const NotificationBell = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  const deleteNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  const deleteNotification = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:3000/api/notifications/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+    } catch (err) {
+      console.error("Failed to delete notification", err);
+    }
   };
 
-  const markAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const markAllRead = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.patch("http://localhost:3000/api/notifications/read", {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    } catch (err) {
+      console.error("Failed to mark notifications read", err);
+    }
   };
 
-  const clearAll = () => {
-    setNotifications([]);
-    setOpen(false);
+  const clearAll = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete("http://localhost:3000/api/notifications", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNotifications([]);
+      setOpen(false);
+    } catch (err) {
+      console.error("Failed to clear notifications", err);
+    }
   };
 
   const handleOpen = () => {
+    if (!open) {
+      markAllRead();
+    }
     setOpen((v) => !v);
-    // Mark all as read when opening
-    if (!open) markAllRead();
   };
 
   return (

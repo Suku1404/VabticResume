@@ -44,18 +44,18 @@ const Modal = ({
 
       <div
         className={clsx(
-          "relative w-full rounded-2xl bg-white shadow-2xl",
+          "relative w-full rounded-2xl bg-white dark:bg-slate-900 border dark:border-white/5 shadow-2xl text-slate-800 dark:text-white",
           "animate-[modalPop_0.25s_ease-out]",
           sizes[size]
         )}
       >
-        <div className="flex items-start justify-between border-b border-gray-100 p-6">
+        <div className="flex items-start justify-between border-b border-gray-100 dark:border-white/5 p-6">
           <div>
             {title && (
-              <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
             )}
             {description && (
-              <p className="mt-1 text-sm text-gray-500">{description}</p>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>
             )}
           </div>
 
@@ -64,7 +64,7 @@ const Modal = ({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="rounded-full px-2"
+              className="rounded-full px-2 text-slate-500 dark:text-gray-400"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -74,7 +74,7 @@ const Modal = ({
         <div className="max-h-[70vh] overflow-y-auto p-6">{children}</div>
 
         {footer && (
-          <div className="flex items-center justify-end gap-3 border-t border-gray-100 p-6">
+          <div className="flex items-center justify-end gap-3 border-t border-gray-100 dark:border-white/5 p-6">
             {footer}
           </div>
         )}

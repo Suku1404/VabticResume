@@ -10,7 +10,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 
 type AtsResult = {
@@ -68,6 +68,41 @@ const AtsScore = () => {
   const [analysis, setAnalysis] = useState<AtsAnalysis | null>(null);
   const [showReport, setShowReport] = useState(false);
 
+  // Library & History integration
+  const [resumes, setResumes] = useState<any[]>([]);
+  const [selectedResumeId, setSelectedResumeId] = useState<string>("");
+  const [useLibrary, setUseLibrary] = useState(false);
+  const [scansHistory, setScansHistory] = useState<any[]>([]);
+
+  const fetchResumesAndHistory = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    
+    try {
+      // Fetch resumes
+      const resResponse = await axios.get("http://localhost:3000/api/resumes", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const resumesList = Array.isArray(resResponse.data) ? resResponse.data : (resResponse.data?.resumes || []);
+      setResumes(resumesList);
+      if (resumesList.length > 0) {
+        setSelectedResumeId(resumesList[0].id.toString());
+      }
+      
+      // Fetch scan history
+      const scansResponse = await axios.get("http://localhost:3000/api/ats/scans", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setScansHistory(scansResponse.data || []);
+    } catch (err) {
+      console.error("Failed to load user resources:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchResumesAndHistory();
+  }, []);
+
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
@@ -89,22 +124,37 @@ const AtsScore = () => {
   };
 
   const handleCheckScore = async () => {
-    if (!resumeFile) {
+    if (!useLibrary && !resumeFile) {
       alert("Upload resume first.");
+      return;
+    }
+    if (useLibrary && !selectedResumeId) {
+      alert("Select a resume first.");
       return;
     }
 
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("resume", resumeFile);
+      if (!useLibrary && resumeFile) {
+        formData.append("resume", resumeFile);
+      } else {
+        formData.append("resumeId", selectedResumeId);
+      }
       formData.append("jobDescription", jobDescription);
+
+      const token = localStorage.getItem("token");
+      const headers: any = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
 
       const res = await axios.post(
         "http://localhost:3000/api/ats/ats-check-score",
         formData,
         {
           headers: {
+            ...headers,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -114,9 +164,35 @@ const AtsScore = () => {
       setResult(res.data.result);
       setAnalysis(res.data.analysis);
       setShowReport(true);
+
+      // Refresh scan history after successful scan
+      if (token) {
+        fetchResumesAndHistory();
+      }
     } catch (error: any) {
       console.error("Error:", error.response?.data || error.message);
       alert(error.response?.data?.message || "Something went wrong while checking ATS score");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleViewScanReport = async (scanId: number) => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`http://localhost:3000/api/ats/scans/${scanId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const scan = response.data;
+      setScore(scan.score);
+      setResult(scan.analysis.result);
+      setAnalysis(scan.analysis.analysis);
+      setShowReport(true);
+    } catch (err: any) {
+      console.error(err);
+      alert("Failed to load historical scan report.");
     } finally {
       setLoading(false);
     }
@@ -159,9 +235,9 @@ const AtsScore = () => {
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
           <FloatingPanel delay={0}>
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Upload Resume</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Ats Scanner Controls</h2>
                 <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Supported format: PDF only</p>
               </div>
               <div className="rounded-lg border border-purple-300/20 bg-purple-500/10 px-3 py-2 text-xs font-semibold text-purple-700 dark:text-purple-200">
@@ -169,44 +245,96 @@ const AtsScore = () => {
               </div>
             </div>
 
-            <label
-              htmlFor="resume-upload"
-              className="mt-7 flex min-h-64 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 dark:border-purple-300/40 bg-white dark:bg-[#14182a]/80 px-6 py-12 text-center shadow-inner hover:-translate-y-1 hover:border-indigo-500 dark:hover:border-purple-300/80 hover:bg-slate-50 dark:hover:bg-purple-500/15 transition duration-300"
-            >
-              {resumeFile ? (
-                <>
-                  <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-400/10 text-emerald-600 dark:text-emerald-300"
-                  >
-                    <CheckCircle size={42} />
-                  </motion.div>
-                  <span className="mt-5 font-semibold text-slate-800 dark:text-purple-200">File Selected</span>
-                  <span className="mt-2 max-w-full truncate text-sm text-slate-600 dark:text-slate-300">{resumeFile.name}</span>
-                </>
-              ) : (
-                <>
-                  <motion.div
-                    animate={{ y: [0, -8, 0] }}
-                    transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-                    className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-50 dark:bg-purple-500/15 text-indigo-600 dark:text-purple-200"
-                  >
-                    <Upload size={38} />
-                  </motion.div>
-                  <span className="mt-5 font-semibold text-slate-800 dark:text-white">Click to upload your resume</span>
-                  <span className="mt-1 text-sm text-slate-500 dark:text-slate-400">or drag and drop file here</span>
-                </>
-              )}
+            {/* Select Input Type Tabs if logged in */}
+            {resumes.length > 0 && (
+              <div className="flex gap-2 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setUseLibrary(false)}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition ${
+                    !useLibrary
+                      ? "bg-indigo-600 text-white border-indigo-600"
+                      : "bg-transparent text-slate-500 border-gray-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5"
+                  }`}
+                >
+                  Upload New File
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUseLibrary(true)}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg border transition ${
+                    useLibrary
+                      ? "bg-indigo-600 text-white border-indigo-600"
+                      : "bg-transparent text-slate-500 border-gray-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5"
+                  }`}
+                >
+                  Select From Library
+                </button>
+              </div>
+            )}
 
-              <input
-                id="resume-upload"
-                type="file"
-                accept=".pdf"
-                className="hidden"
-                onChange={handleFileUpload}
-              />
-            </label>
+            {useLibrary ? (
+              <div className="mt-7 p-6 rounded-lg border border-dashed border-gray-300 dark:border-purple-300/40 bg-white dark:bg-[#14182a]/80 shadow-inner flex flex-col justify-center min-h-64">
+                <div className="space-y-4">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Choose Resume Profile
+                  </label>
+                  <select
+                    value={selectedResumeId}
+                    onChange={(e) => setSelectedResumeId(e.target.value)}
+                    className="w-full rounded-lg border border-gray-250 bg-white dark:border-white/10 dark:bg-[#0f1322] px-4 py-3 text-sm leading-6 text-slate-800 dark:text-slate-100 outline-none transition focus:border-indigo-500 dark:focus:border-purple-300/70"
+                  >
+                    {resumes.map((r) => (
+                      <option key={r.id} value={r.id.toString()}>
+                        {r.title}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[10px] text-gray-400">
+                    Selected resume data will be converted to text and optimized against standard ATS frameworks.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <label
+                htmlFor="resume-upload"
+                className="mt-7 flex min-h-64 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 dark:border-purple-300/40 bg-white dark:bg-[#14182a]/80 px-6 py-12 text-center shadow-inner hover:-translate-y-1 hover:border-indigo-500 dark:hover:border-purple-300/80 hover:bg-slate-50 dark:hover:bg-purple-500/15 transition duration-300"
+              >
+                {resumeFile ? (
+                  <>
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-400/10 text-emerald-600 dark:text-emerald-300"
+                    >
+                      <CheckCircle size={42} />
+                    </motion.div>
+                    <span className="mt-5 font-semibold text-slate-800 dark:text-purple-200">File Selected</span>
+                    <span className="mt-2 max-w-full truncate text-sm text-slate-600 dark:text-slate-300">{resumeFile.name}</span>
+                  </>
+                ) : (
+                  <>
+                    <motion.div
+                      animate={{ y: [0, -8, 0] }}
+                      transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                      className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-50 dark:bg-purple-500/15 text-indigo-600 dark:text-purple-200"
+                    >
+                      <Upload size={38} />
+                    </motion.div>
+                    <span className="mt-5 font-semibold text-slate-800 dark:text-white">Click to upload your resume</span>
+                    <span className="mt-1 text-sm text-slate-500 dark:text-slate-400">or drag and drop file here</span>
+                  </>
+                )}
+
+                <input
+                  id="resume-upload"
+                  type="file"
+                  accept=".pdf"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+              </label>
+            )}
 
             <label className="mt-6 block">
               <span className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -231,33 +359,72 @@ const AtsScore = () => {
             </button>
           </FloatingPanel>
 
-          <FloatingPanel delay={0.15}>
-            <div className="flex items-center gap-3 text-slate-900 dark:text-white">
-              <Sparkles className="text-indigo-600 dark:text-purple-300" />
-              <h2 className="text-2xl font-bold">Result Preview</h2>
-            </div>
+          <div>
+            <FloatingPanel delay={0.15}>
+              <div className="flex items-center gap-3 text-slate-900 dark:text-white">
+                <Sparkles className="text-indigo-600 dark:text-purple-300" />
+                <h2 className="text-2xl font-bold">Result Preview</h2>
+              </div>
 
-            <div className="mt-8 flex justify-center">
-              <ScoreRing score={score} grade={analysis?.grade || "-"} />
-            </div>
+              <div className="mt-8 flex justify-center">
+                <ScoreRing score={score} grade={analysis?.grade || "-"} />
+              </div>
 
-            <div className="mt-8 space-y-3">
-              <ScoreItem title="Keywords Match" value={result.keywordsMatch} />
-              <ScoreItem title="Formatting" value={result.formatting} />
-              <ScoreItem title="Readability" value={result.readability} />
-              <ScoreItem title="Recruiter Friendly" value={result.recruiterFriendly} />
-              <ScoreItem title="Section Coverage" value={result.sectionCoverage} />
-            </div>
+              <div className="mt-8 space-y-3">
+                <ScoreItem title="Keywords Match" value={result.keywordsMatch} />
+                <ScoreItem title="Formatting" value={result.formatting} />
+                <ScoreItem title="Readability" value={result.readability} />
+                <ScoreItem title="Recruiter Friendly" value={result.recruiterFriendly} />
+                <ScoreItem title="Section Coverage" value={result.sectionCoverage} />
+              </div>
 
-            {analysis && (
-              <button
-                onClick={() => setShowReport(true)}
-                className="mt-7 w-full rounded-lg border border-gray-200 dark:border-purple-300/30 bg-slate-100 dark:bg-purple-500/10 px-5 py-3 text-sm font-bold text-indigo-700 dark:text-purple-100 transition hover:-translate-y-1 hover:bg-slate-200 dark:hover:bg-purple-500/20"
-              >
-                Open Full Scan Report
-              </button>
+              {analysis && (
+                <button
+                  onClick={() => setShowReport(true)}
+                  className="mt-7 w-full rounded-lg border border-gray-200 dark:border-purple-300/30 bg-slate-100 dark:bg-purple-500/10 px-5 py-3 text-sm font-bold text-indigo-700 dark:text-purple-100 transition hover:-translate-y-1 hover:bg-slate-200 dark:hover:bg-purple-500/20"
+                >
+                  Open Full Scan Report
+                </button>
+              )}
+            </FloatingPanel>
+
+            {/* Scan History Side List */}
+            {scansHistory.length > 0 && (
+              <div className="mt-6">
+                <FloatingPanel delay={0.3}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Scan History Logs</h3>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-650 dark:text-indigo-300 font-semibold">
+                      {scansHistory.length} Scans
+                    </span>
+                  </div>
+                  <div className="space-y-3.5 max-h-72 overflow-y-auto pr-1">
+                    {scansHistory.map((scan) => (
+                      <div
+                        key={scan.id}
+                        onClick={() => handleViewScanReport(scan.id)}
+                        className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.045] px-4 py-3 cursor-pointer hover:border-indigo-500 dark:hover:border-purple-500/50 hover:bg-slate-50 dark:hover:bg-purple-500/10 transition"
+                      >
+                        <div className="min-w-0 flex-1 pr-2">
+                          <h4 className="text-xs font-bold text-slate-800 dark:text-white truncate">{scan.title}</h4>
+                          <p className="text-[10px] text-gray-400 mt-0.5">
+                            {new Date(scan.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                          scan.score >= 80 ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" :
+                          scan.score >= 60 ? "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300" :
+                          "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300"
+                        }`}>
+                          {scan.score}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </FloatingPanel>
+              </div>
             )}
-          </FloatingPanel>
+          </div>
         </div>
       </main>
 

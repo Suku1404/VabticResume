@@ -15,7 +15,8 @@ const upload = multer({
 //  api auth
 router.post("/user/register",authController.RegisterUser)
 router.post("/user/login",authController.LoginUser)
-
+router.get("/user/profile", authMiddleware, authController.GetProfile)
+router.put("/user/profile", authMiddleware, authController.UpdateProfile)
 
 router.get("/my-resumes", authMiddleware, resumeController.getMyResumes);
 router.get("/my-resume/:id", authMiddleware, resumeController.getResumeById);

@@ -27,7 +27,8 @@ const Select = ({ label, error, helperText, options, className, id, ...props }: 
       <select
         id={selectId}
         className={clsx(
-          "w-full rounded-xl border bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition-all duration-300 dark:bg-slate-900 dark:text-white",
+          "w-full rounded-xl border bg-white px-4 text-sm text-gray-900 shadow-sm outline-none transition-all duration-300 dark:bg-slate-900 dark:text-white",
+          !className?.includes("py-") && "py-3",
           "focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10",
           error ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-gray-200 dark:border-white/10",
           className

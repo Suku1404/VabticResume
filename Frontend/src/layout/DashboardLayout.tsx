@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import {
-  FileText,
   Home,
   LayoutTemplate,
   LogOut,
@@ -14,6 +13,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Target,
+  Compass,
+  Trophy
 } from "lucide-react";
 import clsx from "clsx";
 import { Button, ThemeToggle, NotificationBell } from "../components/common";
@@ -25,8 +26,10 @@ type DashboardLayoutProps = {
 
 const menuItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
-  { label: "My Resumes", icon: FileText, path: "/dashboard" },
   { label: "Templates", icon: LayoutTemplate, path: "/user/templates" },
+  { label: "Resume Match", icon: Target, path: "/resume-match" },
+  { label: "Interview Prep", icon: Trophy, path: "/interview-prep" },
+  { label: "Career Copilot", icon: Compass, path: "/career-copilot" },
   { label: "AI Assistant", icon: Sparkles, path: "/ai-resume-improve" },
   { label: "ATS Checker", icon: Target, path: "/ats-score-checker" },
   { label: "Profile", icon: User, path: "/profile" },
@@ -39,6 +42,36 @@ const DashboardLayout = ({
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [userInitials, setUserInitials] = useState("U");
+
+  useEffect(() => {
+    const fetchInitials = () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          if (payload.name) {
+            const firstLetter = payload.name.trim().charAt(0).toUpperCase();
+            setUserInitials(firstLetter || "U");
+          }
+        }
+      } catch (err) {
+        console.error("Error reading token for initials", err);
+      }
+    };
+
+    fetchInitials();
+
+    // Listen for storage updates (e.g. if username changes in Profile page)
+    window.addEventListener("storage", fetchInitials);
+    // Support custom profile update events as well
+    window.addEventListener("profileUpdated", fetchInitials);
+
+    return () => {
+      window.removeEventListener("storage", fetchInitials);
+      window.removeEventListener("profileUpdated", fetchInitials);
+    };
+  }, []);
 
   // Determine back/next paths for dashboard/templates pages
   const getNavPaths = (path: string) => {
@@ -47,16 +80,25 @@ const DashboardLayout = ({
       return { back: "/", next: "/user/templates", backLabel: "Home", nextLabel: "Templates" };
     }
     if (p === "/user/templates") {
-      return { back: "/dashboard", next: "/ai-resume-improve", backLabel: "Dashboard", nextLabel: "AI Resume" };
+      return { back: "/dashboard", next: "/resume-match", backLabel: "Dashboard", nextLabel: "Resume Match" };
+    }
+    if (p === "/resume-match") {
+      return { back: "/user/templates", next: "/interview-prep", backLabel: "Templates", nextLabel: "Interview Prep" };
+    }
+    if (p === "/interview-prep") {
+      return { back: "/resume-match", next: "/career-copilot", backLabel: "Resume Match", nextLabel: "Career Copilot" };
+    }
+    if (p === "/career-copilot") {
+      return { back: "/interview-prep", next: "/ai-resume-improve", backLabel: "Interview Prep", nextLabel: "AI Assistant" };
     }
     if (p === "/ai-resume-improve") {
-      return { back: "/user/templates", next: "/ats-score-checker", backLabel: "Templates", nextLabel: "ATS Checker" };
+      return { back: "/career-copilot", next: "/ats-score-checker", backLabel: "Career Copilot", nextLabel: "ATS Checker" };
     }
     if (p === "/ats-score-checker") {
-      return { back: "/ai-resume-improve", next: "/dashboard", backLabel: "AI Resume", nextLabel: "Dashboard" };
+      return { back: "/ai-resume-improve", next: "/profile", backLabel: "AI Assistant", nextLabel: "Profile" };
     }
     if (p === "/profile") {
-      return { back: "/dashboard", next: "/user/templates", backLabel: "Dashboard", nextLabel: "Templates" };
+      return { back: "/ats-score-checker", next: "/dashboard", backLabel: "ATS Checker", nextLabel: "Dashboard" };
     }
     return { back: "/dashboard", next: "/user/templates", backLabel: "Dashboard", nextLabel: "Templates" };
   };
@@ -189,7 +231,7 @@ const DashboardLayout = ({
               </Button>
 
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold" title="User Profile">
-                S
+                {userInitials}
               </div>
             </div>
           </div>

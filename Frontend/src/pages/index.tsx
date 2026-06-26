@@ -7,3 +7,7 @@ export { default as Register } from "./Register";
 export { default as Templates } from "./Templates";
 export { default as AiResumeImprove } from "./AiResumeImprove";
 export { default as Profile } from "./Profile";
+export { default as SharedResume } from "./SharedResume";
+export { default as InterviewPrep } from "./InterviewPrep";
+export { default as ResumeMatch } from "./ResumeMatch";
+export { default as CareerCopilot } from "./CareerCopilot";
